@@ -271,7 +271,7 @@ def('rubik',5,true,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
    function path(p){g.beginPath();g.moveTo(p[0][0],p[0][1]);for(var t=1;t<4;t++)g.lineTo(p[t][0],p[t][1]);g.closePath();}
    q.forEach(function(e){path(e.b);g.fillStyle='#000';g.fill();path(e.s);g.fillStyle=(kd?RGRY:RCOL)[e.k];g.fill();
     if(e.sel){g.lineWidth=kd?3:2.5;g.strokeStyle=kd?'#000':'#fff';g.stroke();}
-    if(kd||N<=4){var ce=[0,1,2,3].reduce(function(m,t){return [m[0]+e.s[t][0]/4,m[1]+e.s[t][1]/4];},[0,0]);g.fillStyle=(kd&&(e.k===1||e.k===2))?'#fff':'#000';g.font='bold '+Math.round(sc*e.s[0][2]*1.3)+'px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(RLT.charAt(e.k),ce[0],ce[1]);}});}
+    if(false){var ce=[0,1,2,3].reduce(function(m,t){return [m[0]+e.s[t][0]/4,m[1]+e.s[t][1]/4];},[0,0]);g.fillStyle=(kd&&(e.k===1||e.k===2))?'#fff':'#000';g.font='bold '+Math.round(sc*e.s[0][2]*1.3)+'px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(RLT.charAt(e.k),ce[0],ce[1]);}});}
   var AX=['R/L','U/D','F/B'],bx='<div class="rbx">'+AX.map(function(t,j){return '<button data-t="a'+j+'">'+t+'</button>';}).join('')+'</div><div class="rbx">';
   for(i=0;i<N;i++)bx+='<button data-t="l'+i+'">'+(i+1)+'</button>';bx+='</div>';
   var sp={kind:'custom',ttl:ttl,show:IM.lang==='tr'?'En fazla '+k+' hamlede çözülürdü':'Solvable in at most '+k+' moves',gate:gate,dump:function(){return JSON.stringify(st);},scr:log,solvedNow:solved,
