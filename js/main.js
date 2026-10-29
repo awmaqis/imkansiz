@@ -283,7 +283,7 @@ function tests(){var o=[],M=IM.math,V=IM.vox;
  t('3B: ayna görüntüsü farklı',function(){var s=[[0,0,0],[1,0,0],[1,1,0],[1,1,1]];return V.canon(s)!==V.canon(s.map(function(v){return [-v[0],v[1],v[2]];}));});
  t('3B: mutate bağlantılı & farklı',function(){for(var i=0;i<30;i++){var s=V.genShape(7),m=V.mutate(s);if(m&&(!V.connected(m)||V.canon(m)===V.canon(s)))return 'hata';}return true;});
  t('küp: ↑↓ ve ←→ çevirme geri alınır (her bakış açısında)',function(){var sp=T.rubik.make(60),c={done:false,el:document.createElement('div'),pass:function(){},fail:function(){}},d0=sp.dump(),i,v;
-  for(i=0;i<12;i++){sp.act(['vl','vl','vu','vr','vd','vd','vr','vl','vl','vu','vr','vl'][i],c);sp.rbApply('v',-.6+i*.9,[.5,-.5,1.2,-1.2][i%4],c);['rp','cn','rn','cp'].forEach(function(z){sp.act(z,c);});
+  for(i=0;i<12;i++){sp.rbApply('v',-.6+i*.9,[.5,-.5,1.2,-1.2][i%4],c);['rp','cn','rn','cp'].forEach(function(z){sp.act(z,c);});
    v=sp.dump();sp.act('tu',c);if(sp.dump()===v)return 'tu işe yaramadı';sp.act('td',c);if(sp.dump()!==v)return 'tu/td geri almıyor @'+i;
    sp.act('tl',c);if(sp.dump()===v)return 'tl işe yaramadı';sp.act('tr',c);if(sp.dump()!==v)return 'tl/tr geri almıyor @'+i;}return true;});
  t('tüm görevler L1/50/100 üretir',function(){var save=run;run={L:1,cards:[]};var bad=null;Object.keys(T).forEach(function(id){[1,50,100].forEach(function(L){try{var sp=T[id].make(L);if(typeof sp.body!=='string'||!(sp.ttl>0))bad=id+'@'+L;}catch(e){bad=id+'@'+L+' '+e.message;}});});run=save;return bad||true;});

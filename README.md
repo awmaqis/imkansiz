@@ -15,11 +15,10 @@ Derleme yok: düz HTML + JS. GitHub Pages'e `index.html`, `style.css`, `js/` (9 
 - LAB → "Otomatik testler" tüm görevleri 1/50/100. seviyede üretip kontrol eder.
 
 ## Küp Rubik: kontroller
-- **ÇEVİR** (4 yön tuşu ↑ ↓ ← →): seçili satırı sola/sağa, seçili sütunu yukarı/aşağı çevirir. Hepsi ekrana göre çalışır.
-- **BAK** (4 yön tuşu ▲ ▼ ◀ ▶): küpün çevresinde dolaşır (yanlar, üst, alt). Fare/parmak sürüklemesi de bakış açısını çevirir; sürüklediğin yöne döner (ters değil).
-- **SATIR / SÜTUN**: numara düğmeleriyle ya da küpün üstüne tıklayarak seçilir (pembe = satır, turkuaz = sütun).
-- **Klavye**: küpün kartına tıkla. Varsayılan: W A S D küpü döndürür (bak), ok tuşları satır/sütunu çevirir, satır Q/E, sütun Z/C. Fare de küpü döndürür. Menü → KÜP TUŞLARI ekranından hepsi değiştirilebilir (localStorage'a kaydedilir).
-- Kayıtlar (replay) küp hareketlerini, bakış açısını ve seçimi de aynen oynatır.
+- **Fare / parmak sürüklemesi**: küpü döndürür (tek yol). Sürüklediğin yöne döner, ters değil.
+- **W A S D** (ÇEVİR): seçili satırı sola/sağa (A/D), seçili sütunu yukarı/aşağı (W/S) çevirir. Ekrana göre çalışır.
+- **Ok tuşları** (SEÇ): satır (↑↓) ve sütun (←→) arasında gezer. Küpe tıklayarak da seçilir; numara düğmeleri de var (pembe = satır, turkuaz = sütun).
+- **Klavye**: küpün kartına tıkla. Menü → KÜP TUŞLARI ekranından hepsi değiştirilebilir.
 
 ## Kindle
 Kindle modu tamamen kaldırıldı. Eski Kindle kayıtları (replay) listede gösterilmez.

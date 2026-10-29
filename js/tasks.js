@@ -246,10 +246,9 @@ def('anagram',21,{tr:'Harf bulmaca',en:'Anagram'},
    Hepsi ekrana göre (kameraya göre) çalışır. Tuşlar IM.rb ile ayarlanır (menü → KÜP TUŞLARI). ---- */
 var RCOL=['#1f9d3a','#1f5fd8','#d62828','#ff8c1a','#f4f4f4','#ffd500'],RLT='GBROWY';
 IM.rb={
- acts:[['tu','Çevir ↑','Turn ↑'],['td','Çevir ↓','Turn ↓'],['tl','Çevir ←','Turn ←'],['tr','Çevir →','Turn →'],
-  ['vu','Bak ▲','View ▲'],['vd','Bak ▼','View ▼'],['vl','Bak ◀','View ◀'],['vr','Bak ▶','View ▶'],
+ acts:[['tu','Çevir ↑ (sütun)','Turn ↑ (column)'],['td','Çevir ↓ (sütun)','Turn ↓ (column)'],['tl','Çevir ← (satır)','Turn ← (row)'],['tr','Çevir → (satır)','Turn → (row)'],
   ['rp','Satır yukarı','Row up'],['rn','Satır aşağı','Row down'],['cp','Sütun sola','Column left'],['cn','Sütun sağa','Column right']],
- def:{tu:'ArrowUp',td:'ArrowDown',tl:'ArrowLeft',tr:'ArrowRight',vu:'KeyW',vd:'KeyS',vl:'KeyA',vr:'KeyD',rp:'KeyQ',rn:'KeyE',cp:'KeyZ',cn:'KeyC'},
+ def:{tu:'KeyW',td:'KeyS',tl:'KeyA',tr:'KeyD',rp:'ArrowUp',rn:'ArrowDown',cp:'ArrowLeft',cn:'ArrowRight'},
  ok:/^(Key[A-Z]|Digit\d|Numpad\w+|Arrow\w+|Space|Bracket\w+|Comma|Period|Semicolon|Quote|Slash|Backslash|Minus|Equal|Backquote)$/,
  keys:function(){var o={},k=(IM.S&&IM.S.rbKeys)||{},a;for(a in IM.rb.def)o[a]=k[a]||IM.rb.def[a];return o;},
  find:function(code){var K=IM.rb.keys(),a;for(a in K)if(K[a]===code)return a;return null;},
@@ -269,11 +268,11 @@ function rbAxes(y,p){var c=rbCam(y,p),up=c.it([0,1,0]),rt=c.it([1,0,0]),aV=0,aH,
  for(i=0;i<3;i++)if(Math.abs(up[i])>b){b=Math.abs(up[i]);aV=i;}
  b=-1;aH=0;for(i=0;i<3;i++)if(i!==aV&&Math.abs(rt[i])>b){b=Math.abs(rt[i]);aH=i;}
  return {cam:c,aV:aV,aH:aH,sV:up[aV]>=0?1:-1,sH:rt[aH]>=0?1:-1};}
-var RB_PIT=[-1.4,-.5,.5,1.4],RB_Y0=-.6,RB_Q=Math.PI/2;
+var RB_Y0=-.6;
 def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
- {tr:'3 BOYUTLU KÜP RUBİK. Karışık bir küp gelir; her yüzü tek renge getir. 2×2 ile başlar, 100. seviyede 8×8 olur. ÇEVİR: önce SATIR ve SÜTUN numarasını seç (küp üzerinde pembe = satır, turkuaz = sütun parlar; küpe tıklayarak da seçebilirsin). Sonra ÇEVİR yön tuşlarıyla (↑ ↓ ← →) o satırı sola/sağa, o sütunu yukarı/aşağı çevir. Hepsi ekrana göre çalışır. BAK: ◀ ▶ ▲ ▼ ile küpün çevresinde dolaş (yanlar, üst, alt) ya da fareyle / parmakla sürükle; sürüklediğin yöne döner, ters değil. Dolaştıkça küpün başka yüzleri de çevrilebilir hâle gelir. KLAVYE: küpün kartına tıkla; varsayılan olarak küpü döndürmek (bakmak) W A S D, satır/sütun çevirmek ok tuşları, satır seçmek Q/E, sütun seçmek Z/C. Hepsi menüdeki KÜP TUŞLARI ekranından değiştirilebilir. Her 10. seviyenin sonunda (10, 20, … 100) bir küp çözmeden sonraki seviyeye geçemezsin; sıradan seviyelerde de bitmeden önce bir küp gelir. Süre dolarsa kart düşer.',
-  en:"3D RUBIK'S CUBE. A scrambled cube appears; make every face one colour. Starts at 2×2 and reaches 8×8 at level 100. TURN: first pick a ROW and a COLUMN number (on the cube pink = row, cyan = column; you can also click the cube to pick). Then use the TURN arrows (↑ ↓ ← →) to turn that row left/right and that column up/down. Everything is relative to the screen. LOOK: walk around the cube with ◀ ▶ ▲ ▼ (sides, top, bottom) or drag with the mouse / finger; it turns the way you drag, not the opposite. As you walk around, other faces become turnable. KEYBOARD: click the cube card; by default W A S D rotate the cube (look), arrow keys turn the row/column, Q/E pick the row, Z/C pick the column. All of them can be changed in the menu under CUBE KEYS. At the end of every 10th level (10, 20, … 100) you must solve a cube to advance; ordinary levels also drop one before they end. If time runs out the card fails."},
- function(L){var o=IM.rbOpt||{};IM.rbOpt=null;var gate=!!o.gate,boss=gate&&L>=100,N=rbSize(L),fr,k,i,j,a,li,last='',st=[],log=[],guard=0,h,rowI=0,colI=0,yaw=RB_Y0,pit=.5,tY=null,tP=null,cvs=null,hits=[],keyEl=null,kb=IM.rb.keys();
+ {tr:'3 BOYUTLU KÜP RUBİK. Karışık bir küp gelir; her yüzü tek renge getir. 2×2 ile başlar, 100. seviyede 8×8 olur. ÇEVİR: önce SATIR ve SÜTUN numarasını seç (küp üzerinde pembe = satır, turkuaz = sütun parlar; küpe tıklayarak da seçebilirsin). Sonra ÇEVİR tuşlarıyla (W A S D) o satırı sola/sağa (A/D), o sütunu yukarı/aşağı (W/S) çevir. Hepsi ekrana göre çalışır. SEÇ: ok tuşlarıyla satır (↑↓) ve sütun (←→) arasında gez. KÜPÜ DÖNDÜRMEK sadece fareyle / parmakla sürükleyerek olur; sürüklediğin yöne döner, ters değil. Küpü döndürdükçe başka yüzleri de çevirebilirsin. KLAVYE: küpün kartına tıkla. Menüdeki KÜP TUŞLARI ekranından tuşlar değiştirilebilir. Her 10. seviyenin sonunda (10, 20, … 100) bir küp çözmeden sonraki seviyeye geçemezsin; sıradan seviyelerde de bitmeden önce bir küp gelir. Süre dolarsa kart düşer.',
+  en:"3D RUBIK'S CUBE. A scrambled cube appears; make every face one colour. Starts at 2×2 and reaches 8×8 at level 100. TURN: first pick a ROW and a COLUMN number (on the cube pink = row, cyan = column; you can also click the cube to pick). Then use the TURN keys (W A S D): A/D turn that row left/right, W/S turn that column up/down. Everything is relative to the screen. PICK: walk between rows (↑↓) and columns (←→) with the arrow keys. ONLY THE MOUSE / FINGER ROTATES THE CUBE: it turns the way you drag, not the opposite. As you rotate it, other faces become turnable. KEYBOARD: click the cube card. Keys can be changed in the menu under CUBE KEYS. At the end of every 10th level (10, 20, … 100) you must solve a cube to advance; ordinary levels also drop one before they end. If time runs out the card fails."},
+ function(L){var o=IM.rbOpt||{};IM.rbOpt=null;var gate=!!o.gate,boss=gate&&L>=100,N=rbSize(L),fr,k,i,j,a,li,last='',st=[],log=[],guard=0,h,rowI=0,colI=0,yaw=RB_Y0,pit=.5,cvs=null,hits=[],keyEl=null,kb=IM.rb.keys();
   if(!gate&&N>2&&Math.random()<.35)N--;
   h=N-1;fr=rbFrac(L,N)*(gate?1:.8);if(gate)fr=Math.min(1,fr+.15);
   k=boss?24:Math.max(1,Math.round(2+fr*(4+2*N))+R(-1,1));
@@ -284,7 +283,7 @@ def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
   function solved(){var m={},ok=true;st.forEach(function(s){var key=s.n.join();if(m[key]===undefined)m[key]=s.k;else if(m[key]!==s.k)ok=false;});return ok;}
   do{log=[];for(i=0;i<k;i++){do{a=R(0,2);li=R(0,N-1);}while(a+':'+li===last&&k>1);last=a+':'+li;var q0=P([1,-1]);mv(a,-h+2*li,q0);log.push([a,-h+2*li,q0]);}guard++;}while(solved()&&guard<9);
   /* "niyet edilen" görünüm: animasyon sürüyorsa hedef, yoksa şimdiki */
-  function ey(){return tY===null?yaw:tY;}function ep(){return tP===null?pit:tP;}
+  function ey(){return yaw;}function ep(){return pit;}
   function axes(){return rbAxes(ey(),ep());}
   function rowCo(A){return A.sV*(h-2*rowI);}function colCo(A){return A.sH*(-h+2*colI);}
   function draw(){if(IM.ff)return;var cv=cvs;if(!cv)return;var g=cv.getContext('2d'),W=cv.width,H=cv.height,sc=.265*Math.min(W,H)/N,cm=rbCam(yaw,pit),D=7*N,A=axes(),rc=rowCo(A),cc=colCo(A),q=[];
@@ -305,16 +304,12 @@ def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
    dv[ax]=0;var m=Math.sqrt(dv[0]*dv[0]+dv[1]*dv[1]+dv[2]*dv[2])||1;dv=dv.map(function(x){return 3*x/m;});
    [1,-1].forEach(function(q){var s0=A.cam.tr(dv),s1=A.cam.tr(rv(dv,ax,q)),sc2=d===0?s1[1]-s0[1]:d===1?s0[1]-s1[1]:d===2?s0[0]-s1[0]:s1[0]-s0[0];if(sc2>bs){bs=sc2;best=q;}});
    mv(ax,co,best);}
-  function stepView(dir){var by=ey(),bp=ep(),t;
-   if(dir==='l'||dir==='r'){var kk=(by-RB_Y0)/RB_Q;kk=dir==='l'?Math.ceil(kk-1e-6)-1:Math.floor(kk+1e-6)+1;tY=RB_Y0+kk*RB_Q;}
-   else if(dir==='u'){t=null;RB_PIT.forEach(function(v){if(v<bp-1e-6)t=v;});tP=t===null?RB_PIT[0]:t;}
-   else{t=null;for(var z=RB_PIT.length-1;z>=0;z--)if(RB_PIT[z]>bp+1e-6)t=RB_PIT[z];tP=t===null?RB_PIT[RB_PIT.length-1]:t;}}
   var bx='<div class="rbl">'+(IM.lang==='tr'?'SATIR (pembe)':'ROW (pink)')+'</div><div class="rbx r">';
   for(i=0;i<N;i++)bx+='<button data-t="R'+i+'">'+(i+1)+'</button>';
   bx+='</div><div class="rbl">'+(IM.lang==='tr'?'SÜTUN (turkuaz)':'COLUMN (cyan)')+'</div><div class="rbx c">';
   for(i=0;i<N;i++)bx+='<button data-t="C'+i+'">'+(i+1)+'</button>';bx+='</div>';
-  function cross(p,sym,cls){var h2='<div class="dp '+cls+'">';['u','l','d','r'].forEach(function(d,ix){h2+='<button class="d'+d+'" data-t="'+p+d+'" data-a="'+p+d+'">'+sym[ix]+'<small data-k="'+p+d+'"></small></button>';});return h2+'</div>';}
-  var pads='<div class="rbpads"><div><div class="rbl">'+(IM.lang==='tr'?'ÇEVİR':'TURN')+'</div>'+cross('t',['↑','←','↓','→'],'tn')+'</div><div><div class="rbl">'+(IM.lang==='tr'?'BAK':'LOOK')+'</div>'+cross('v',['▲','◀','▼','▶'],'vw')+'</div></div>';
+  function cross(ids,sym,cls){var h2='<div class="dp '+cls+'">';['u','l','d','r'].forEach(function(d,ix){h2+='<button class="d'+d+'" data-t="'+ids[ix]+'">'+sym[ix]+'<small data-k="'+ids[ix]+'"></small></button>';});return h2+'</div>';}
+  var pads='<div class="rbpads"><div><div class="rbl">'+(IM.lang==='tr'?'ÇEVİR (sütun ↑↓ · satır ←→)':'TURN (column ↑↓ · row ←→)')+'</div>'+cross(['tu','tl','td','tr'],['↑','←','↓','→'],'tn')+'</div><div><div class="rbl">'+(IM.lang==='tr'?'SEÇ (satır ↑↓ · sütun ←→)':'PICK (row ↑↓ · column ←→)')+'</div>'+cross(['rp','cp','rn','cn'],['↑','←','↓','→'],'vw')+'</div></div>';
   var sp={kind:'custom',ttl:ttl,show:IM.lang==='tr'?'En fazla '+k+' hamlede çözülürdü':'Solvable in at most '+k+' moves',gate:gate,dump:function(){return JSON.stringify(st);},scr:log,solvedNow:solved,
    body:tag((gate?(IM.lang==='tr'?'KAPI · çöz ve geç · ':'GATE · solve to advance · '):'')+N+'×'+N)+'<canvas class="cv rbcv" width="320" height="300"></canvas><div class="rbh"></div>'+bx+pads};
   function sync(c){U.qa(c.el,'.rbx button').forEach(function(b){var t=b.getAttribute('data-t');b.className=(t==='R'+rowI||t==='C'+colI)?'on':'';});draw();}
@@ -323,24 +318,20 @@ def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
    if(ch==='R')rowI=clampI(+t.slice(1));else if(ch==='C')colI=clampI(+t.slice(1));
    else if(t==='rp')rowI=clampI(rowI-1);else if(t==='rn')rowI=clampI(rowI+1);else if(t==='cp')colI=clampI(colI-1);else if(t==='cn')colI=clampI(colI+1);
    else if(ch==='t'){turn(dm[t.charAt(1)]);if(solved()){sync(c);c.pass();return;}}
-   else if(ch==='v')stepView(t.charAt(1));
    sync(c);}
   sp.act=act;
   sp.rbApply=function(kind,a,b,c){if(c.done)return;
    if(kind==='k')act(a,c);
-   else if(kind==='v'){yaw=a;pit=b;tY=tP=null;sync(c);}
+   else if(kind==='v'){yaw=a;pit=b;sync(c);}
    else if(kind==='s'){rowI=clampI(a);colI=clampI(b);sync(c);}};
   sp.paint=draw;
-  sp.update=function(dt,c){var mvd=false,f=Math.min(1,dt*10);
-   if(tY!==null){yaw+=(tY-yaw)*f;if(Math.abs(tY-yaw)<.003){yaw=tY;tY=null;}mvd=true;}
-   if(tP!==null){pit+=(tP-pit)*f;if(Math.abs(tP-pit)<.003){pit=tP;tP=null;}mvd=true;}
-   if(mvd)draw();
+  sp.update=function(dt,c){
    if(keyEl&&!IM.ff){var on=IM.rbOn&&IM.rbOn()===c,tx=on?(IM.lang==='tr'?'⌨ klavye aktif':'⌨ keyboard on'):(IM.lang==='tr'?'⌨ klavye için küpe tıkla':'⌨ click the cube for keyboard');if(keyEl.textContent!==tx)keyEl.textContent=tx;}};
   sp.init=function(c){cvs=c.el.querySelector('canvas');keyEl=c.el.querySelector('.rbh');
    U.qa(c.el,'.rbx button,.dp button').forEach(function(b){b.onclick=function(ev){ev.stopPropagation();act(b.getAttribute('data-t'),c);};});
    U.qa(c.el,'small[data-k]').forEach(function(s){s.textContent=IM.rb.label(kb[s.getAttribute('data-k')]);});
    var dr=null,mx=0;
-   function down(x,y){if(IM.rp||c.done)return;dr=[x,y];mx=0;tY=tP=null;}
+   function down(x,y){if(IM.rp||c.done)return;dr=[x,y];mx=0;}
    function move(x,y){if(!dr)return;var dx=x-dr[0],dy=y-dr[1];mx+=Math.abs(dx)+Math.abs(dy);yaw+=dx*.012;pit=Math.max(-1.45,Math.min(1.45,pit+dy*.012));dr=[x,y];draw();}
    function up(x,y){if(!dr)return;dr=null;if(mx>0)IM.evt&&IM.evt('R',c.n,'v',yaw,pit);
     if(mx<5&&x!==undefined){var r=cvs.getBoundingClientRect(),px=(x-r.left)*cvs.width/r.width,py=(y-r.top)*cvs.height/r.height,i2,e,A;
