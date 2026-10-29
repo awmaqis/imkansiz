@@ -1,6 +1,6 @@
 (function(){
 var IM=window.IM=window.IM||{};
-IM.lang='tr';
+IM.lang='tr';try{IM.jr=localStorage.getItem('im2mode')==='j';}catch(e){IM.jr=false;}
 function R(a,b){return a+Math.floor(Math.random()*(b-a+1));}
 IM.U={
  R:R,

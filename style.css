@@ -143,3 +143,15 @@ body.v-stat #ft{display:none!important}body.v-stat #hud,body.v-rec #hud{display:
 .krs{display:grid;gap:6px;margin:10px 0}.kr{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .kb{display:inline-block;min-width:64px;text-align:center;padding:6px 10px;border:1px solid var(--ln);border-radius:8px;cursor:pointer;user-select:none}.kb.on{background:var(--ac,#0ff);color:#000}
 @media(max-width:520px){.dp{grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,48px)}}
+
+/* JUNIOR (12 yaş altı): daha büyük, yuvarlak, canlı */
+.jr{--bg:#1d1b4b;--pn:#2b2870;--pn2:#3a35a0;--ln:#6c63ff;--ac:#ffd23b;--ok:#3ddc97;--bd:#ff6b8b;--mu:#b9b4ff;--r:18px}
+.jr body,body.jr{font-size:18px}
+.jr button{border-radius:14px;padding:10px 16px;border-width:2px}
+.jr .card{border-radius:20px;border-width:3px}
+.jr .q,.jr .big{font-size:1.15em}
+.jr #inp{font-size:20px;border-radius:14px}
+.jr #brand{background:linear-gradient(90deg,#ff6b8b,#ffd23b,#3ddc97,#6c63ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.jrb{background:#ffd23b;color:#1d1b4b;border-radius:12px;padding:0 10px;font-size:.55em;vertical-align:middle;letter-spacing:.08em}
+.jr .mb button{font-size:18px;padding:14px 18px}
+.jr #st{background:linear-gradient(90deg,#3ddc97,#ffd23b,#ff6b8b)}

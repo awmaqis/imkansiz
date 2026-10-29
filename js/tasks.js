@@ -1,7 +1,7 @@
 (function(){
 var IM=window.IM,U=IM.U,R=U.R,P=U.P,T=IM.TASKS={};
-function tm(b,L){return b*Math.max(.35,1-L*.0065);}
-function fl(s){return s;}
+function tm(b,L){return b*Math.max(.35,1-L*.0065)*(IM.jr?1.8:1);}
+function fl(s){return IM.jr?s*1.6+.5:s;}
 function def(id,unlock,name,how,make){T[id]={id:id,unlock:unlock,name:name,how:how,make:make};}
 function big(s,c){return '<div class="big'+(c?' '+c:'')+'">'+s+'</div>';}
 function tag(s){return '<div class="tag">'+s+'</div>';}
@@ -19,10 +19,19 @@ function wordCard(w,L,tagTxt,res){
  return {kind:'text',body:(tagTxt?tag(tagTxt):'')+tag('EN → TR')+big(U.esc(w[1])),
   check:function(t){return strict?trx.indexOf(U.lc(t.trim()))>=0:tr.indexOf(U.nz(t))>=0;},show:w[0],ttl:tm(13,L),onResult:r2,onWrong:ow};}
 
+/* Junior matematik: tek işlem, negatif yok, bölme tam. L (1-12) arttıkça sayılar büyür, çarpım tablosu ve iki adımlı işlem gelir. */
+function jrMath(L){var a,b,c,v,q,k=L<=3?R(0,1):L<=6?R(0,3):L<=9?R(0,4):R(0,5);
+ if(k===0){a=R(1,5+L*2);b=R(1,5+L*2);v=a+b;q=a+' + '+b;}
+ else if(k===1){a=R(3,8+L*2);b=R(1,a);v=a-b;q=a+' − '+b;}
+ else if(k===2){a=R(10,30+L*8);b=R(5,a);v=a-b;q=a+' − '+b;}
+ else if(k===3){a=R(2,Math.min(10,3+L));b=R(2,Math.min(10,3+L));v=a*b;q=a+' × '+b;}
+ else if(k===4){b=R(2,Math.min(10,2+L));v=R(2,Math.min(10,2+L));a=b*v;q=a+' ÷ '+b;}
+ else{a=R(10,60);b=R(2,9);c=R(1,a);v=a+b-c;q=a+' + '+b+' − '+c;}
+ return {q:q+' = ?',v:v,s:String(v),tier:1};}
 def('math',1,{tr:'Matematik',en:'Math'},
  {tr:'Kartta bir formül görünür. Sonucu hesapla ve alttaki kutuya yazıp Enter\'a bas. Cevap sayı ya da a/b kesridir (örn. 3/4). Zorluk okuldaki gibi basamak basamak artar: aritmetik, kesirler, denklemler, üsler, ikinci derece, logaritma, trigonometri, limit, türev, integral, seriler, karmaşık sayılar, matrisler.',
   en:'A formula appears on the card. Solve it, type the result in the box and press Enter. Answers are numbers or a/b fractions (e.g. 3/4). Difficulty climbs like school: arithmetic, fractions, equations, powers, quadratics, logs, trig, limits, derivatives, integrals, series, complex numbers, matrices.'},
- function(L){var g=IM.math.gen(L);return {kind:'text',body:'<div class="q">'+U.esc(g.q).replace(/\n/g,'<br>')+'</div>',check:function(t){return IM.math.check(t,g.v);},show:g.s,ttl:tm(22+g.tier*4,L)};});
+ function(L){var g=IM.jr?jrMath(L):IM.math.gen(L);return {kind:'text',body:'<div class="q">'+U.esc(g.q).replace(/\n/g,'<br>')+'</div>',check:function(t){return IM.math.check(t,g.v);},show:g.s,ttl:tm(22+g.tier*4,L)};});
 
 def('words',3,{tr:'Kelime',en:'Words'},
  {tr:'Türkçe kelime görürsün: İngilizcesini yaz. İngilizce görürsen: Türkçesini yaz. 50. seviyeye kadar ç, ğ, ı, ö, ş, ü yerine c, g, i, o, s, u yazabilirsin; 50\'den sonra harfler tam doğru olmalı. Yanlış cevap kartı düşürmez ama stres yükler. Seviye yükseldikçe daha nadir ve zor kelimeler gelir.',
@@ -276,7 +285,7 @@ def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
   if(!gate&&N>2&&Math.random()<.35)N--;
   h=N-1;fr=rbFrac(L,N)*(gate?1:.8);if(gate)fr=Math.min(1,fr+.15);
   k=boss?24:Math.max(1,Math.round(2+fr*(4+2*N))+R(-1,1));
-  var ttl=boss?1800:(45+k*16+N*N*4)*(gate?1.25:1);
+  var ttl=boss?1800:(45+k*16+N*N*4)*(gate?1.25:1)*(IM.jr?1.6:1);
   for(a=0;a<3;a++)[1,-1].forEach(function(sg){var n=[0,0,0],u=(a+1)%3,w=(a+2)%3,x,y;n[a]=sg;
    for(x=0;x<N;x++)for(y=0;y<N;y++){var c=[0,0,0];c[a]=sg*h;c[u]=-h+2*x;c[w]=-h+2*y;st.push({c:c,n:n.slice(),k:nidx(n)});}});
   function mv(a,pv,q){st.forEach(function(s){if(s.c[a]===pv){s.c=rv(s.c,a,q);s.n=rv(s.n,a,q);}});}

@@ -2,8 +2,8 @@
 (function(){
 var IM=window.IM,U=IM.U,R=U.R,P=U.P,T=IM.TASKS;
 function X(a,b){return IM.lang==='tr'?a:b;}
-function tm(b,L){return b*Math.max(.35,1-L*.0065);}
-function fl(s){return s;}
+function tm(b,L){return b*Math.max(.35,1-L*.0065)*(IM.jr?1.8:1);}
+function fl(s){return IM.jr?s*1.6+.5:s;}
 function def(id,unlock,name,how,make){T[id]={id:id,unlock:unlock,name:name,how:how,make:make};}
 function big(s,c){return '<div class="big'+(c?' '+c:'')+'">'+s+'</div>';}
 function tag(s){return '<div class="tag">'+s+'</div>';}

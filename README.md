@@ -22,3 +22,9 @@ Derleme yok: düz HTML + JS. GitHub Pages'e `index.html`, `style.css`, `js/` (9 
 
 ## Kindle
 Kindle modu tamamen kaldırıldı. Eski Kindle kayıtları (replay) listede gösterilmez.
+
+## JUNIOR (12 yaş altı)
+- Başlık çubuğundaki **JUNIOR** düğmesi sayfayı çocuk moduna geçirir; modda aynı düğme **İMKANSIZ** yazar ve normal oyuna döner. İlerleme, istatistik, kelime destesi, rekor ve kayıtlar iki mod için ayrı tutulur (`im2` / `im2j`; seçili mod `im2mode`). Dil ve ses ayarı Junior'a ilk açılışta kopyalanır.
+- 30 seviye. Seviye süresi 40 sn + 10 sn × seviye (en çok 5 dk). Aynı anda en çok 4 kart, kartlar seyrek gelir.
+- Görevler 18 tanedir ve kademeli açılır: Matematik (sadece 4 işlem), Kelime, Ok dizisi, Farklı olan, Hızlı yazı, Refleks, Karşılaştır, Sayı hafızası, Renk-kelime, Desen hafızası, Kart eşleştir, Nokta sayma, Sayı dizisi, Dikkat tablosu, Pusula, Işıklar, Harf bulmaca. Küp Rubik 6. seviyeden sonra 2×2 olarak gelir. Ağır görevler (N-geri, 3B, uzun hafıza, ek ustası, zincir hesap, ses, çağrışım) yoktur. 10. seviye küp kapıları da yoktur.
+- Zorluk normal oyunun yaklaşık %40'ı hızındadır (seviye × 0,4). Süreler 1,8 kat uzun, hatırlanacak şeyler 1,6 kat uzun görünür. Süre aşımı +10 (normalde +20), yazım hatası +4 (normalde +10), doğru cevap 3 puan daha fazla rahatlatır.

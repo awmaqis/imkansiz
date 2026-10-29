@@ -5,28 +5,34 @@ function prng(a){a=a>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.i
 function mix(a,b){var h=(a^Math.imul(b+0x9e3779b9|0,0x85ebca6b))>>>0;h=Math.imul(h^(h>>>16),0x45d9f3b)>>>0;h=Math.imul(h^(h>>>16),0x45d9f3b)>>>0;return (h^(h>>>16))>>>0;}
 function $(s){return document.querySelector(s);}
 var S={level:1,best:1,lang:'tr',deck:{}};
-try{var sv=JSON.parse(localStorage.getItem('im2')||'null');if(sv)for(var k in sv)S[k]=sv[k];}catch(e){}
+var SK=IM.jr?'im2j':'im2',MAXL=IM.jr?30:100;
+try{var sv=JSON.parse(localStorage.getItem(SK)||'null');if(!sv&&IM.jr){var sn=JSON.parse(localStorage.getItem('im2')||'null');if(sn)sv={lang:sn.lang,mute:sn.mute};}if(sv)for(var k in sv)S[k]=sv[k];}catch(e){}
 delete S.kindle;
-IM.S=S;IM.save=function(){try{localStorage.setItem('im2',JSON.stringify(S));}catch(e){}};
+IM.S=S;IM.save=function(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}};
 IM.lang=S.lang;
+/* ---------- JUNIOR (12 yaş altı): daha az, daha kolay görev; uzun süre; yumuşak stres; 30 seviye ---------- */
+IM.JRT={math:1,words:2,arrows:3,odd:4,type:5,react:6,compare:7,digits:8,stroop:10,grid:11,pairs:12,dots:13,series:15,schulte:17,compass:19,lights:21,anagram:23};
+if(IM.jr){Object.keys(T).forEach(function(id){if(id==='rubik')T[id].unlock=5;else if(IM.JRT[id]===undefined)delete T[id];else T[id].unlock=IM.JRT[id];});
+ T.math.how={tr:'Kartta bir toplama, çıkarma, çarpma ya da bölme işlemi görürsün. Sonucu kutuya yaz ve Enter\'a bas. Acele etme, süren uzun!',en:'You see an adding, subtracting, multiplying or dividing sum. Type the answer in the box and press Enter. No rush, you have lots of time!'};
+ T.words.how={tr:'Türkçe kelime görürsen İngilizcesini, İngilizce görürsen Türkçesini yaz. ç, ğ, ı, ö, ş, ü yerine c, g, i, o, s, u yazabilirsin. Yanlış yazarsan kart düşmez, tekrar dene!',en:'See a Turkish word? Type it in English. See an English word? Type it in Turkish. You may type c, g, i, o, s, u instead of ç, ğ, ı, ö, ş, ü. A wrong try does not drop the card, try again!'};}
 var run=null,view='menu',raf=0,iv=0,last=0,inp=$('#inp'),arena=$('#arena');
-function setView(v){view=v;document.body.className='v-'+v;}
+function setView(v){view=v;document.body.className=(IM.jr?'jr ':'')+'v-'+v;}
 function X(a,b){return S.lang==='tr'?a:b;}
 function statAdd(type,ok,sec){var st=S.stats||(S.stats={}),q=st[type]||(st[type]={n:0,ok:0,t:0});q.n++;if(ok){q.ok++;q.t+=Math.max(0,sec);}IM.save();}
-function lv(x){return Math.max(1,Math.min(100,x));}
+function lv(x){return Math.max(1,Math.min(MAXL,x));}
 
 /* ---------- overlay ---------- */
 function ov(html,btns){var o=$('#ov');o.innerHTML='<div class="box">'+html+'<div class="bt">'+btns.map(function(b,i){return '<button data-i="'+i+'">'+b[0]+'</button>';}).join('')+'</div></div>';o.style.display='flex';
  o.onclick=function(e){var b=e.target;while(b&&b!==o&&b.tagName!=='BUTTON')b=b.parentNode;if(b&&b.tagName==='BUTTON'){o.style.display='none';var f=btns[+b.getAttribute('data-i')][1];if(f)f();}};}
 function howHtml(ids){return ids.map(function(i){return '<h3>'+T[i].name[S.lang]+' <small>(L'+T[i].unlock+')</small></h3><p>'+T[i].how[S.lang]+'</p>';}).join('');}
 function allIds(){return Object.keys(T).filter(function(i){return true;}).sort(function(a,b){return T[a].unlock-T[b].unlock;});}
-function showHelp(){ov('<h2>'+IM.t('help')+'</h2><p>'+(S.lang==='tr'?'Kartlar ekrana düşer. Her kartın bir süresi var. Doğru cevap stresi 5 puan düşürür (art arda doğrularda 10 puana kadar). Süre aşımı ya da yanlış seçim 20, yazım hatası 10 puan yükseltir. Art arda doğrular skor çarpanı kazandırır. Seviye süresi 30 sn × seviye numarası kadardır. Bu süreyi dayanırsan sonraki seviye açılır ama oyun bitmez: istediğin kadar devam eder, stres %100 olunca biter. Tab veya tıklama ile hangi kartın aktif olduğunu seçersin; yazdığın cevap aktif karta gider. Ok tuşları ve SPACE ilgili kartlara doğrudan gider. ESC: duraklat.':'Cards fall onto the arena, each with a time limit. A right answer lowers stress by 5 (up to 10 on a streak). A timeout or wrong pick adds 20, a typo adds 10. Streaks multiply your score. A level takes 30 s × level number. Survive that long and the next level unlocks, but the game keeps going: play as long as you like until stress hits 100%. Tab or click picks the active card; typed answers go to it. Arrow keys and SPACE go straight to matching cards. ESC pauses.')+'</p>'+howHtml(allIds()),[[IM.t('menu'),null]]);}
+function showHelp(){ov('<h2>'+IM.t('help')+'</h2><p>'+(IM.jr?X('Ekrana kartlar düşer. Her kartın bir süresi var; cevabı yaz ve Enter\'a bas, ya da düğmelere dokun. Doğru cevap stres çubuğunu düşürür, yanlış cevap biraz yükseltir. Stres %100 olursa oyun biter, ama sorun değil, tekrar dene! 30 seviye var. Tab ya da tıklama ile hangi kartla oynadığını seçersin. ESC: duraklat.','Cards drop onto the screen. Each card has a timer: type the answer and press Enter, or tap the buttons. Right answers lower the stress bar, wrong ones raise it a little. If stress hits 100% the game ends, but that is fine, try again! There are 30 levels. Tab or a click picks the card you play. ESC pauses.'):S.lang==='tr'?'Kartlar ekrana düşer. Her kartın bir süresi var. Doğru cevap stresi 5 puan düşürür (art arda doğrularda 10 puana kadar). Süre aşımı ya da yanlış seçim 20, yazım hatası 10 puan yükseltir. Art arda doğrular skor çarpanı kazandırır. Seviye süresi 30 sn × seviye numarası kadardır. Bu süreyi dayanırsan sonraki seviye açılır ama oyun bitmez: istediğin kadar devam eder, stres %100 olunca biter. Tab veya tıklama ile hangi kartın aktif olduğunu seçersin; yazdığın cevap aktif karta gider. Ok tuşları ve SPACE ilgili kartlara doğrudan gider. ESC: duraklat.':'Cards fall onto the arena, each with a time limit. A right answer lowers stress by 5 (up to 10 on a streak). A timeout or wrong pick adds 20, a typo adds 10. Streaks multiply your score. A level takes 30 s × level number. Survive that long and the next level unlocks, but the game keeps going: play as long as you like until stress hits 100%. Tab or click picks the active card; typed answers go to it. Arrow keys and SPACE go straight to matching cards. ESC pauses.')+'</p>'+howHtml(allIds()),[[IM.t('menu'),null]]);}
 
 /* ---------- menü ---------- */
 function renderMenu(){
- $('#bl').textContent=S.lang==='tr'?'EN':'TR';$('#bs').textContent=S.mute?'♪ ✕':'♪';
+ $('#bl').textContent=S.lang==='tr'?'EN':'TR';$('#bj').textContent=IM.jr?'İMKANSIZ':'JUNIOR';$('#brand').textContent=IM.jr?'İMKANSIZ JUNIOR':'İMKANSIZ';document.title=$('#brand').textContent;$('#bs').textContent=S.mute?'♪ ✕':'♪';
  var chips=allIds().map(function(id){var d=T[id];return '<span class="chip'+(d.unlock>S.best?' lk':'')+'" data-c="'+d.cat+'"><i>'+d.ico+'</i>'+d.name[S.lang]+'<small>'+d.unlock+'</small></span>';}).join('');
- $('#menu').innerHTML='<div class="hero"><svg class="ecg" viewBox="0 0 600 60" preserveAspectRatio="none"><polyline points="0,30 90,30 110,30 125,8 140,52 155,30 260,30 280,30 295,14 310,46 325,30 450,30 470,30 485,2 500,58 515,30 600,30"/></svg><h1>İMKANSIZ</h1><p>'+IM.t('tag')+'</p></div>'+
+ $('#menu').innerHTML='<div class="hero"><svg class="ecg" viewBox="0 0 600 60" preserveAspectRatio="none"><polyline points="0,30 90,30 110,30 125,8 140,52 155,30 260,30 280,30 295,14 310,46 325,30 450,30 470,30 485,2 500,58 515,30 600,30"/></svg><h1>'+(IM.jr?'İMKANSIZ <span class="jrb">JUNIOR</span>':'İMKANSIZ')+'</h1><p>'+(IM.jr?X('Beynini çalıştır, seviye seviye ilerle! 🧠⭐','Train your brain, level by level! 🧠⭐'):IM.t('tag'))+'</p></div>'+
  '<div class="mb"><button class="pr" id="m1">'+IM.t('cont')+S.level+'</button><button id="m2">'+IM.t('newg')+'</button><button id="m6">'+X('İSTATİSTİKLER · HAFIZA DURUMU','STATISTICS · MEMORY STATUS')+'</button><button id="m7">'+X('KÜP TUŞLARI','CUBE KEYS')+'</button><button id="m3">'+IM.t('lab')+'</button><button id="m5">'+IM.t('recs')+' ('+IM.recs.list().length+')</button><button id="m4">'+IM.t('help')+'</button></div>'+
  '<div class="lsel"><span>'+IM.t('pickLvl')+': <b id="lvn">'+S.level+'</b> / '+S.best+'</span><input type="range" id="lvr" min="1" max="'+S.best+'" value="'+Math.min(S.level,S.best)+'"></div>'+
  '<div class="chips">'+chips+'</div><div class="cr">'+IM.t('credit')+(S.hi?' · ★ '+S.hi:'')+'</div>';
@@ -52,6 +58,7 @@ function renderStats(){var st=S.stats||{},ids=allIds(),cat={},n=0,ok=0,h,D=S.dec
  ids.forEach(function(id){var q=st[id]||{n:0,ok:0,t:0};h+='<div class="tr" data-c="'+T[id].cat+'"><span><i>'+T[id].ico+'</i> '+T[id].name[S.lang]+'</span><b>'+(q.n?Math.round(q.ok/q.n*100)+'%':'–')+'</b><small>'+q.n+(q.ok?' · '+(q.t/q.ok).toFixed(1)+'s':'')+'</small></div>';});
  $('#statp').innerHTML=h+'</div>';$('#sb0').onclick=toMenu;}
 $('#bl').onclick=function(){S.lang=S.lang==='tr'?'en':'tr';IM.lang=S.lang;document.documentElement.lang=S.lang;IM.save();refreshUI();};
+$('#bj').onclick=function(){try{localStorage.setItem('im2mode',IM.jr?'n':'j');}catch(e){}location.reload();};
 $('#bs').onclick=function(){S.mute=!S.mute;IM.save();$('#bs').textContent=S.mute?'♪ ✕':'♪';};
 $('#bm').onclick=function(){if(rp)rpExit();else if(run&&!run.lab&&!run.paused)pauseOv();else toMenu();};
 function refreshUI(){inp.placeholder=IM.t('ph');renderMenu();if(view==='lab')renderLab();if(view==='rec')renderRecs();if(view==='stat')renderStats();}
@@ -70,7 +77,7 @@ function rbConfig(){var cap=null;
 
 /* ---------- oyun motoru ---------- */
 var TICK=1/30,acc=0,rp=null,errN=0;
-function newRun(L,lab){return {L:L,lab:lab||null,dur:lab?1e9:30*L,unlocked:false,t:0,stress:0,cards:[],sel:null,spawnT:0,ok:0,bad:0,paused:false,tick:0,nc:0,all:{},dying:[],seed:0,dt:TICK,rec:null,replay:null,streak:0,maxStreak:0,score:0,lastType:'',counted:0};}
+function newRun(L,lab){return {L:L,lab:lab||null,dur:lab?1e9:(IM.jr?Math.min(300,40+L*10):30*L),unlocked:false,t:0,stress:0,cards:[],sel:null,spawnT:0,ok:0,bad:0,paused:false,tick:0,nc:0,all:{},dying:[],seed:0,dt:TICK,rec:null,replay:null,streak:0,maxStreak:0,score:0,lastType:'',counted:0};}
 function evt(){if(run&&run.rec&&!run.replay){var a=[run.tick],i;for(i=0;i<arguments.length;i++)a.push(arguments[i]);run.rec.ev.push(a);}}
 IM.evt=function(){return evt.apply(null,arguments);};
 var rbOn=null;IM.rbOn=function(){return rbOn;};
@@ -83,11 +90,11 @@ function beginLevel(L){stopRun();var nt=Object.keys(T).filter(function(i){return
  function go(){if(!IM.wordsReady&&Date.now()<t0+3000){setTimeout(go,100);return;}
   setLoop();errN=0;
   var seed=(origRand()*4294967296)>>>0;run=newRun(L,null);run.seed=seed;
-  run.rec={v:1,id:Date.now().toString(36)+Math.floor(origRand()*1e6).toString(36),ts:Date.now(),L:L,seed:seed,lang:S.lang,dt:run.dt,wh:IM.wh(),nW:IM.W.length,ltm:[],ev:[],res:[]};
+  run.rec={v:1,id:Date.now().toString(36)+Math.floor(origRand()*1e6).toString(36),ts:Date.now(),L:L,seed:seed,jr:IM.jr?1:0,lang:S.lang,dt:run.dt,wh:IM.wh(),nW:IM.W.length,ltm:[],ev:[],res:[]};
   IM.rec=run.rec;Math.random=prng(seed);acc=0;setView('game');inp.value='';inp.focus();hud();}
  if(nt.length)ov('<h2>'+IM.t('lvl')+' '+L+'</h2><h3>'+IM.t('newtask')+'</h3>'+howHtml(nt),[[IM.t('start'),go],[IM.t('menu'),toMenu]]);else go();}
-function maxCards(L){return Math.min(9,1+Math.floor(L/9));}
-function interval(L){return Math.max(1.5,7-L*.06);}
+function maxCards(L){return IM.jr?Math.min(4,1+Math.floor(L/8)):Math.min(9,1+Math.floor(L/9));}
+function interval(L){return IM.jr?Math.max(4.5,9-L*.1):Math.max(1.5,7-L*.06);}
 function spawn(){var L=run.L,ids=run.lab?[run.lab]:pool(L),cur=run.cards.map(function(c){return c.type;}),cand=ids.filter(function(i){return cur.indexOf(i)<0;});
  if(!cand.length)cand=ids.filter(function(i){return i!==run.lastType;});if(!cand.length)cand=ids;var ty=P(cand);run.lastType=ty;addCard(ty);}
 function showAns(c,msg){var sp=c.spec,h='',a=c.el.querySelector('.ans');
@@ -97,12 +104,12 @@ function showAns(c,msg){var sp=c.spec,h='',a=c.el.querySelector('.ans');
  if(sp.kind==='choice')U.qa(c.el,'.op').forEach(function(o,i){if(i===sp.ans)o.className='op right';else if(i===c.pick)o.className='op wrongpick';});}
 function addCard(type){var def=T[type],L=run.L,n=run.nc++,sp,el=document.createElement('div'),lbl=String.fromCharCode(65+(n%26)),opts='';
  if(!run.lab)Math.random=prng(mix(run.seed,n*2+1));
- sp=def.make(L);
+ sp=def.make(IM.jr?Math.ceil(L*.4):L);
  if(sp.kind==='choice')opts='<div class="opts">'+sp.opts.map(function(o,i){return '<button class="op" data-i="'+i+'"><kbd>'+(i+1)+'</kbd>'+o+'</button>';}).join('')+'</div>';
  el.className='card';el.setAttribute('data-n',n);el.setAttribute('data-c',def.cat||'logic');el.innerHTML='<div class="ch"><b class="lbl">'+lbl+'</b><span class="ico">'+(def.ico||'')+'</span><span class="nm">'+def.name[S.lang]+'</span><span class="tm"></span></div><div class="cb">'+sp.body+'</div>'+opts+'<div class="ans"></div><div class="bar"><i></i></div>';
  var c={n:n,el:el,spec:sp,type:type,left:sp.ttl,ttl:sp.ttl,done:false,tmEl:el.querySelector('.tm'),barEl:el.querySelector('.bar i'),last:'',pick:-1,wt:0,rm:0};
  function end(ok,msg){if(c.done)return false;c.done=true;var i=run.cards.indexOf(c);if(i>=0)run.cards.splice(i,1);
-  if(sp.onResult)sp.onResult(ok);if(sp.gate){if(ok)run.gateDone=true;else run.gateOn=false;}var pts=0;if(!run.lab){run.stress=ok?Math.max(0,run.stress-5-Math.min(5,run.streak>>1)):Math.min(100,run.stress+20);}
+  if(sp.onResult)sp.onResult(ok);if(sp.gate){if(ok)run.gateDone=true;else run.gateOn=false;}var pts=0;if(!run.lab){run.stress=ok?Math.max(0,run.stress-5-Math.min(5,run.streak>>1)-(IM.jr?3:0)):Math.min(100,run.stress+(IM.jr?10:20));}
   if(ok){run.streak++;if(run.streak>run.maxStreak)run.maxStreak=run.streak;pts=Math.round(100*(1+Math.min(4,run.streak*.25))*(.4+.6*Math.max(0,c.left)/c.ttl));run.score+=pts;}else run.streak=0;
   if(!run.replay&&!run.lab)statAdd(type,ok,c.ttl-c.left);if(IM.sfx)IM.sfx(ok);if(!ok&&!run.replay&&navigator.vibrate){try{navigator.vibrate(60);}catch(_){}}
   if(ok)run.ok++;else run.bad++;if(run.rec&&!run.replay)run.rec.res.push([run.tick,n,type,ok?1:0]);
@@ -110,7 +117,7 @@ function addCard(type){var def=T[type],L=run.L,n=run.nc++,sp,el=document.createE
   c.rm=run.t+(ok?.38:3.5);run.dying.push(c);
   if(run.lab)labCount();hud();return true;}
  c.pass=function(){end(true);};c.fail=function(m){end(false,m);};
- c.wrong=function(){if(sp.onWrong)sp.onWrong();run.streak=0;if(!run.lab)run.stress=Math.min(100,run.stress+10);el.className='card act bad';c.wt=run.t+.3;hud();};
+ c.wrong=function(){if(sp.onWrong)sp.onWrong();run.streak=0;if(!run.lab)run.stress=Math.min(100,run.stress+(IM.jr?4:10));el.className='card act bad';c.wt=run.t+.3;hud();};
  el.onclick=function(e){run.sel=c;if(e.target.closest&&e.target.closest('.op')){choose(c,+e.target.closest('.op').getAttribute('data-i'));}};
  arena.appendChild(el);run.cards.push(c);run.all[n]=c;if(sp.init)sp.init(c);
  if(run.replay)addTools(c);
@@ -131,11 +138,11 @@ function step(dt){if(!run||run.paused)return;run.t+=dt;var L=run.L;
   if(c.wt&&run.t>=c.wt){c.wt=0;c.el.className='card';}if(c.left<=0)c.fail(IM.t('late'));});
  run.dying=run.dying.filter(function(c){if(run.t<c.rm)return true;if(c.el.parentNode)c.el.parentNode.removeChild(c.el);return false;});
  run.tick++;if(!IM.ff)paint();
- if(!run.lab){if(run.stress>=100){if(run.replay)run.ended='lose';else lose();}else if(run.t>=run.dur&&!run.unlocked){if(run.L%10===0&&!run.gateDone){if(!run.gateOn){run.gateOn=true;IM.rbOpt={gate:1};addCard('rubik');}}else{run.unlocked=true;if(!run.replay)unlock();}}
+ if(!run.lab){if(run.stress>=100){if(run.replay)run.ended='lose';else lose();}else if(run.t>=run.dur&&!run.unlocked){if(!IM.jr&&run.L%10===0&&!run.gateDone){if(!run.gateOn){run.gateOn=true;IM.rbOpt={gate:1};addCard('rubik');}}else{run.unlocked=true;if(!run.replay)unlock();}}
   if(!run.preDone&&run.L>=6&&run.L%10!==0&&run.t>=run.dur*.55&&!run.unlocked){run.preDone=true;addCard('rubik');}}}
-function unlock(){var L=run.L;S.best=Math.max(S.best,Math.min(100,L+1));S.level=Math.min(100,L+1);IM.save();
+function unlock(){var L=run.L;S.best=Math.max(S.best,Math.min(MAXL,L+1));S.level=Math.min(MAXL,L+1);IM.save();
  var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
- t.textContent=(L>=100?IM.t('finale'):IM.t('unlocked'));t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},6000);}
+ t.textContent=(L>=MAXL?(IM.jr?X('Tebrikler! Junior\'ı bitirdin! 🎉 Şimdi büyük İMKANSIZ\'ı deneyebilirsin.','Congratulations! You finished Junior! 🎉 Now you can try the big İMKANSIZ.'):IM.t('finale')):IM.t('unlocked'));t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},6000);}
 function lose(){var L=run.L,sc=run.score,ms=run.maxStreak;persist('lose');stopRun();ov('<h2>'+IM.t('over')+'</h2><p>'+IM.t('lvl')+' '+L+' · ★ '+sc+' · '+X('en uzun seri','best streak')+' '+ms+(sc>0&&sc>=(S.hi||0)?' · '+X('REKOR!','NEW BEST!'):'')+'</p><p>'+IM.t('gameOverTip')+'</p><p>'+IM.t('recSaved')+'</p>',[[IM.t('retry'),function(){beginLevel(L);}],[IM.t('menu'),toMenu]]);}
 function setLoop(){cancelAnimationFrame(raf);clearInterval(iv);
  last=Date.now();raf=requestAnimationFrame(fr);}
@@ -153,7 +160,7 @@ inp.addEventListener('mousedown',function(){rbOn=null;});
 inp.addEventListener('input',function(){var c=active();if(c&&c.spec.kind==='choice'){var v=inp.value.trim();if(/^[1-9]$/.test(v)){inp.value='';doDigit(c,+v);}}});
 function submit(){var c=active();if(!c||c.spec.kind!=='text')return;if(c.spec.ready&&!c.spec.ready())return;var v=inp.value;if(!v.trim())return;inp.value='';doSubmit(c,v);}
 function pauseOv(extra){run.paused=true;var b=[[IM.t('resume'),function(){run.paused=false;}]];
- if(run.unlocked&&run.L<100)b.push([IM.t('nextL'),function(){persist('win');beginLevel(S.level);}]);b.push([IM.t('menu'),toMenu]);ov('<h2>'+IM.t('pause')+'</h2>'+(extra||''),b);}
+ if(run.unlocked&&run.L<MAXL)b.push([IM.t('nextL'),function(){persist('win');beginLevel(S.level);}]);b.push([IM.t('menu'),toMenu]);ov('<h2>'+IM.t('pause')+'</h2>'+(extra||''),b);}
 document.addEventListener('keydown',function(e){
  if(rp){rpKey(e);return;}
  if(!run||run.paused||document.getElementById('ov').style.display==='flex')return;
@@ -262,7 +269,7 @@ var labId='math',labL=1;
 function labCount(){var e=$('#lc');if(e&&run)e.textContent=run.ok+' '+IM.t('okc')+' · '+run.bad+' '+IM.t('badc');}
 function renderLab(){
  $('#labp').innerHTML='<div class="lr"><button id="lb">← '+IM.t('menu')+'</button><b>LAB</b></div><div id="labt">'+allIds().map(function(i){return '<button data-id="'+i+'" class="'+(i===labId?'on':'')+'">'+T[i].name[S.lang]+'</button>';}).join('')+'</div>'+
- '<div id="labh"></div><div class="lr"><span>'+IM.t('lvl')+' <b id="labn">'+labL+'</b></span><input type="range" id="labl" min="1" max="100" value="'+labL+'"><button id="lrun">'+IM.t('run')+'</button><button id="lstop">'+IM.t('stop')+'</button><span id="lc"></span></div>'+
+ '<div id="labh"></div><div class="lr"><span>'+IM.t('lvl')+' <b id="labn">'+labL+'</b></span><input type="range" id="labl" min="1" max="'+MAXL+'" value="'+labL+'"><button id="lrun">'+IM.t('run')+'</button><button id="lstop">'+IM.t('stop')+'</button><span id="lc"></span></div>'+
  '<div class="lr"><button id="lt">'+IM.t('tests')+'</button></div><div id="lg"></div>';
  function info(){$('#labh').textContent=T[labId].how[S.lang];}info();
  $('#lb').onclick=toMenu;
