@@ -1,6 +1,6 @@
 (function(){
 var IM=window.IM=window.IM||{};
-IM.lang='tr';IM.kindle=false;
+IM.lang='tr';
 function R(a,b){return a+Math.floor(Math.random()*(b-a+1));}
 IM.U={
  R:R,
@@ -30,7 +30,7 @@ tr:{
  voxQ:'Kaç küp var? (gizli olanlar dahil)',voxS:'İki şekil döndürülünce aynı mı?',anaQ:'Harfleri düzenle, kelimeyi yaz',
  dotsQ:'Kaç nokta vardı?',credit:'Sözlük verisi: Vikisözlük / kaikki.org (CC BY-SA)',finale:'İMKANSIZ’ı yendin. İnsan olduğuna emin misin?',
  mathHint:'Sayı ya da a/b kesri yaz',gameOverTip:'İpucu: LAB sekmesinde zayıf görevini tek başına çalış.',
- kindleOn:'KINDLE: AÇIK',kindleOff:'KINDLE',paused:'Sekme gizlendiği için durdu.',tasks:'GÖREVLER',lvlSel:'SEVİYE',
+ paused:'Sekme gizlendiği için durdu.',tasks:'GÖREVLER',lvlSel:'SEVİYE',
  right:'Doğrusu',yours:'Senin cevabın',reactAns:'Yeşile dönünce bas',
  recs:'KAYITLAR · OYUN TEKRARLARI',noRecs:'Henüz kayıt yok. Bir seviye oyna; her oyun otomatik kaydedilir.',watch:'▶ İZLE',del:'SİL',delAsk:'Bu kaydı silmek istiyor musun?',
  rWin:'tamamlandı',rLose:'stres %100',rQuit:'yarım kaldı',exp:'DIŞA AKTAR',imp:'İÇE AKTAR',impOk:'içe aktarıldı:',impBad:'Dosya okunamadı.',dropped:'Depolama doldu: en eski kayıtlar silindi.',
@@ -51,7 +51,7 @@ tr:{
  voxQ:'How many cubes? (hidden ones too)',voxS:'Same shape once rotated?',anaQ:'Unscramble the Turkish word',
  dotsQ:'How many dots were there?',credit:'Dictionary data: Wiktionary / kaikki.org (CC BY-SA)',finale:'You beat IMKANSIZ. Are you sure you are human?',
  mathHint:'Type a number or a/b fraction',gameOverTip:'Tip: practise your weakest task alone in LAB.',
- kindleOn:'KINDLE: ON',kindleOff:'KINDLE',paused:'Paused because the tab was hidden.',tasks:'TASKS',lvlSel:'LEVEL',
+ paused:'Paused because the tab was hidden.',tasks:'TASKS',lvlSel:'LEVEL',
  right:'Correct',yours:'Your answer',reactAns:'Press when it turns green',
  recs:'REPLAYS · SAVED GAMES',noRecs:'No recordings yet. Play a level; every game is saved automatically.',watch:'▶ WATCH',del:'DELETE',delAsk:'Delete this recording?',
  rWin:'completed',rLose:'stress 100%',rQuit:'unfinished',exp:'EXPORT',imp:'IMPORT',impOk:'imported:',impBad:'Could not read the file.',dropped:'Storage full: the oldest recordings were removed.',

@@ -1,8 +1,8 @@
 (function(){
 var IM=window.IM,U=IM.U,R=U.R,P=U.P,T=IM.TASKS={};
-function tm(b,L){return b*Math.max(.35,1-L*.0065)*(IM.kindle?1.5:1);}
-function fl(s){return IM.kindle?s*1.5+1:s;}
-function def(id,unlock,kindle,name,how,make){T[id]={id:id,unlock:unlock,kindle:kindle,name:name,how:how,make:make};}
+function tm(b,L){return b*Math.max(.35,1-L*.0065);}
+function fl(s){return s;}
+function def(id,unlock,name,how,make){T[id]={id:id,unlock:unlock,name:name,how:how,make:make};}
 function big(s,c){return '<div class="big'+(c?' '+c:'')+'">'+s+'</div>';}
 function tag(s){return '<div class="tag">'+s+'</div>';}
 function flash(o){var t=0,hid=false;
@@ -19,24 +19,24 @@ function wordCard(w,L,tagTxt,res){
  return {kind:'text',body:(tagTxt?tag(tagTxt):'')+tag('EN → TR')+big(U.esc(w[1])),
   check:function(t){return strict?trx.indexOf(U.lc(t.trim()))>=0:tr.indexOf(U.nz(t))>=0;},show:w[0],ttl:tm(13,L),onResult:r2,onWrong:ow};}
 
-def('math',1,true,{tr:'Matematik',en:'Math'},
+def('math',1,{tr:'Matematik',en:'Math'},
  {tr:'Kartta bir formül görünür. Sonucu hesapla ve alttaki kutuya yazıp Enter\'a bas. Cevap sayı ya da a/b kesridir (örn. 3/4). Zorluk okuldaki gibi basamak basamak artar: aritmetik, kesirler, denklemler, üsler, ikinci derece, logaritma, trigonometri, limit, türev, integral, seriler, karmaşık sayılar, matrisler.',
   en:'A formula appears on the card. Solve it, type the result in the box and press Enter. Answers are numbers or a/b fractions (e.g. 3/4). Difficulty climbs like school: arithmetic, fractions, equations, powers, quadratics, logs, trig, limits, derivatives, integrals, series, complex numbers, matrices.'},
  function(L){var g=IM.math.gen(L);return {kind:'text',body:'<div class="q">'+U.esc(g.q).replace(/\n/g,'<br>')+'</div>',check:function(t){return IM.math.check(t,g.v);},show:g.s,ttl:tm(22+g.tier*4,L)};});
 
-def('words',3,true,{tr:'Kelime',en:'Words'},
+def('words',3,{tr:'Kelime',en:'Words'},
  {tr:'Türkçe kelime görürsün: İngilizcesini yaz. İngilizce görürsen: Türkçesini yaz. 50. seviyeye kadar ç, ğ, ı, ö, ş, ü yerine c, g, i, o, s, u yazabilirsin; 50\'den sonra harfler tam doğru olmalı. Yanlış cevap kartı düşürmez ama stres yükler. Seviye yükseldikçe daha nadir ve zor kelimeler gelir.',
   en:'You see a Turkish word: type its English meaning. You see English: type the Turkish. Until level 50 you may type c, g, i, o, s, u instead of ç, ğ, ı, ö, ş, ü; after that letters must be exact. A wrong answer keeps the card but adds stress. Higher levels bring rarer, harder words.'},
  function(L){var w=pickW(L);return wordCard(w,L,'',function(ok){IM.deckNote(w,ok);});});
 
-def('type',5,true,{tr:'Hızlı yazı',en:'Typing'},
+def('type',5,{tr:'Hızlı yazı',en:'Typing'},
  {tr:'Kartta yazan Türkçe metni aynen yaz ve Enter\'a bas. Başta kısa kelimeler, sonra uzun cümleler ve atasözleri gelir. 50. seviyeden sonra Türkçe harfler (ç ğ ı ö ş ü) zorunludur.',
   en:'Type the Turkish text on the card exactly and press Enter. Short words first, later long sentences and proverbs. After level 50 Turkish letters (ç ğ ı ö ş ü) are mandatory.'},
  function(L){var p;if(L>=12&&Math.random()<.5)p=P(IM.SENT);else{var n=1+Math.floor(L/9),a=[];for(var i=0;i<n;i++)a.push(pickW(L,{nospace:1,maxLen:Math.max(5,3+Math.floor(L/4))})[0]);p=a.join(' ');}
   return {kind:'text',body:big(U.esc(p),'sel'),check:function(t){t=t.replace(/\s+/g,' ').trim();return L>50?U.lc(t)===U.lc(p):U.nz(t)===U.nz(p);},show:p,ttl:tm(4+p.length*.5,L)};});
 
 var AR=['↑','→','↓','←'];
-def('arrows',7,true,{tr:'Ok dizisi',en:'Arrows'},
+def('arrows',7,{tr:'Ok dizisi',en:'Arrows'},
  {tr:'Kartta oklar sırayla görünür. Aynı sırayla ok tuşlarına bas (ya da kartın altındaki düğmelere dokun). "TERS SIRADA" yazıyorsa sondan başa, "ZITINA" yazıyorsa her okun tersine bas. Bir yanlış basış kartı düşürür.',
   en:'Arrows appear on the card. Press the arrow keys in the same order (or tap the buttons under the card). If it says "REVERSE" press from last to first; if "OPPOSITE" press the opposite of each arrow. One wrong press fails the card.'},
  function(L){var n=2+Math.floor(L/14),mode='same',seq=[],i,st=0;
@@ -51,7 +51,7 @@ def('arrows',7,true,{tr:'Ok dizisi',en:'Arrows'},
   sp.init=function(c){U.qa(c.el,'.pad button').forEach(function(b){b.onclick=function(){sp.onArrow(+b.getAttribute('data-d'),c);};});};
   return sp;});
 
-def('react',17,false,{tr:'Refleks',en:'Reaction'},
+def('react',17,{tr:'Refleks',en:'Reaction'},
  {tr:'Kutu kırmızı iken bekle. Yeşile dönüp "ŞİMDİ!" yazdığı anda SPACE\'e bas (veya kutuya dokun). Erken basarsan ya da geç kalırsan kart düşer. Yüksek seviyelerde art arda birkaç tur vardır ve tepki süren kısalır.',
   en:'Wait while the box is red. The instant it turns green and says "NOW!" press SPACE (or tap the box). Too early or too late fails the card. At high levels there are several rounds in a row and your window shrinks.'},
  function(L){var rounds=1+Math.floor(L/30),r=0,st='wait',t=0,d=R(12,32)/10,win=Math.max(.38,1.1-L*.008);
@@ -70,7 +70,7 @@ IM.tones=function(fr,dur){if(IM.mute||(IM.S&&IM.S.mute))return;try{AC=AC||new (w
  var t0=AC.currentTime+.05;fr.forEach(function(f,i){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;
   g.gain.setValueAtTime(0,t0+i*dur);g.gain.linearRampToValueAtTime(.25,t0+i*dur+.02);g.gain.linearRampToValueAtTime(0,t0+i*dur+dur*.92);
   o.connect(g);g.connect(AC.destination);o.start(t0+i*dur);o.stop(t0+i*dur+dur);});}catch(e){}};
-def('sound',28,false,{tr:'Ses',en:'Sound'},
+def('sound',28,{tr:'Ses',en:'Sound'},
  {tr:'Kısa bir ses dizisi çalar (ses açık olsun!). Sorulan sesin (en yüksek ya da en alçak) kaçıncı olduğunu seç: kartta 1, 2, 3… tuşuna bas ya da düğmeye dokun. "Tekrar dinle" bedava. Yüksek seviyelerde sesler birbirine çok yakındır.',
   en:'A short tone sequence plays (turn the volume on!). Pick which tone was the highest or the lowest: press 1, 2, 3… or tap the button. "Replay" is free. At high levels the tones are very close in pitch.'},
  function(L){var n=3+Math.floor(L/35),gap=Math.max(1,5-Math.floor(L/20)),ks=[],tr=0,hi=Math.random()<.5;
@@ -81,21 +81,21 @@ def('sound',28,false,{tr:'Ses',en:'Sound'},
   function play(){IM.tones(fr,.4);}
   sp.init=function(c){play();c.el.querySelector('.rp').onclick=play;};return sp;});
 
-def('odd',15,true,{tr:'Farklı olan',en:'Odd one out'},
+def('odd',15,{tr:'Farklı olan',en:'Odd one out'},
  {tr:'Dört (sonra beş) kelimeden üçü aynı gruptandır (hayvan, meyve, renk, meslek…). Farklı gruptan olanı bul: numarasına bas ya da dokun.',
   en:'Of four (later five) Turkish words, all but one belong to the same group (animal, fruit, colour, job…). Find the odd one: press its number or tap it.'},
  function(L){var ks=Object.keys(IM.CATS),a=P(ks),b;do{b=P(ks);}while(b===a);var n=L>=60?5:4;
   var o=P(IM.CATS[b]),op=U.sh(U.sh(IM.CATS[a]).slice(0,n-1).concat([o]));
   return {kind:'choice',body:tag(IM.t('oddQ')),opts:op.map(U.esc),ans:op.indexOf(o),show:o,ttl:tm(9,L)};});
 
-def('assoc',31,true,{tr:'Çağrışım',en:'Association'},
+def('assoc',31,{tr:'Çağrışım',en:'Association'},
  {tr:'Bir kelime verilir. Dört seçenekten hangisi onunla AYNI gruba ait? (Örn. "elma" ile aynı grup: "armut".) Hızlı çağrışım yapman gerekir.',
   en:'A word is shown. Which of the four options belongs to the SAME group? (e.g. with "elma": "armut".) You need fast associative thinking.'},
  function(L){var ks=U.sh(Object.keys(IM.CATS)),a=ks[0],cue=P(IM.CATS[a]),good,o=[];
   do{good=P(IM.CATS[a]);}while(good===cue);o.push(good);for(var i=1;i<4;i++)o.push(P(IM.CATS[ks[i]]));o=U.sh(o);
   return {kind:'choice',body:big(U.esc(cue))+tag(IM.t('assQ')),opts:o.map(U.esc),ans:o.indexOf(good),show:good,ttl:tm(8,L)};});
 
-def('digits',11,true,{tr:'Sayı hafızası',en:'Digit span'},
+def('digits',11,{tr:'Sayı hafızası',en:'Digit span'},
  {tr:'KISA SÜRELİ HAFIZA. Bir sayı dizisi kısa süre görünür sonra kaybolur. Kaybolunca diziyi yaz ve Enter\'a bas. 30. seviyeden sonra bazen TERSTEN yazman istenir.',
   en:'SHORT-TERM MEMORY. A digit string shows briefly, then vanishes. Once hidden, type it and press Enter. After level 30 you sometimes must type it BACKWARDS.'},
  function(L){var n=3+Math.floor(L/9),rev=L>=30&&Math.random()<.5,d='',i;for(i=0;i<n;i++)d+=R(0,9);
@@ -103,10 +103,10 @@ def('digits',11,true,{tr:'Sayı hafızası',en:'Digit span'},
   return flash({shown:big(d,'mono')+tag(IM.t('memo')),hidden:tag(rev?IM.t('typeRev'):IM.t('typeIt')),sec:fl(Math.max(1.2,(.75-L*.003)*n+.8)),ans:tm(3+n*1.2,L),
    check:function(t){return t.replace(/\D/g,'')===a;},show:a});});
 
-def('grid',23,true,{tr:'Desen hafızası',en:'Pattern memory'},
+def('grid',23,{tr:'Desen hafızası',en:'Pattern memory'},
  {tr:'KISA SÜRELİ GÖRSEL HAFIZA. Karelerden bazıları sırayla yanar. Işık bitince AYNI SIRAYLA karelere dokun/tıkla. Seviye arttıkça dizi uzar ve ızgara 4×4 olur.',
   en:'SHORT-TERM VISUAL MEMORY. Squares light up one by one. When the lights stop, tap/click the SAME squares in the SAME order. The sequence grows and the grid becomes 4×4.'},
- function(L){var g=L<50?3:4,k=3+Math.floor(L/9),seq=[],i,v,ph='show',t=0,st=0,step=IM.kindle?2:Math.max(.35,.75-L*.004);
+ function(L){var g=L<50?3:4,k=3+Math.floor(L/9),seq=[],i,v,ph='show',t=0,st=0,step=Math.max(.35,.75-L*.004);
   for(i=0;i<k;i++){do{v=R(0,g*g-1);}while(i&&v===seq[i-1]);seq.push(v);}
   var cells='';for(i=0;i<g*g;i++)cells+='<button data-c="'+i+'"></button>';
   var sp={kind:'custom',body:tag(IM.t('memo'))+'<div class="grid g'+g+'">'+cells+'</div>',ttl:k*step+tm(4+k*1.5,L),show:seq.map(function(x){return x+1;}).join(' ')};
@@ -116,7 +116,7 @@ def('grid',23,true,{tr:'Desen hafızası',en:'Pattern memory'},
    if(+b.getAttribute('data-c')===seq[st]){b.className='dn';st++;if(st>=k)c.pass();}else c.fail();};});};
   return sp;});
 
-def('schulte',19,true,{tr:'Dikkat tablosu',en:'Attention table'},
+def('schulte',19,{tr:'Dikkat tablosu',en:'Attention table'},
  {tr:'Karışık yerleştirilmiş sayılara 1\'den başlayarak sırayla dokun/tıkla. 45. seviyeden sonra sayı ve harf dönüşümlü gider (1, A, 2, B, 3, C…). Yanlış dokunuş kartı düşürür.',
   en:'Tap/click the scattered numbers in order starting from 1. After level 45 numbers and letters alternate (1, A, 2, B, 3, C…). A wrong tap fails the card.'},
  function(L){var N=Math.min(25,4+Math.floor(L/5)),alt=L>=45&&N>=8,seq=[],i,st=0;
@@ -126,7 +126,7 @@ def('schulte',19,true,{tr:'Dikkat tablosu',en:'Attention table'},
   sp.init=function(c){U.qa(c.el,'.sch button').forEach(function(b){b.onclick=function(){if(c.done||b.className)return;
    if(b.textContent===seq[st]){b.className='dn';st++;if(st>=N)c.pass();}else c.fail();};});};return sp;});
 
-def('series',13,true,{tr:'Sayı dizisi',en:'Number series'},
+def('series',13,{tr:'Sayı dizisi',en:'Number series'},
  {tr:'MANTIK. Bir sayı dizisinin ilk terimleri verilir, kuralı bul ve soru işaretinin yerine gelecek sayıyı yaz.',
   en:'LOGIC. The first terms of a series are shown. Find the rule and type the number that replaces the question mark.'},
  function(L){var k=R(0,Math.min(7,2+Math.floor(L/12))),a=R(1,9),d=R(2,9),s=[],i,r;
@@ -140,7 +140,7 @@ def('series',13,true,{tr:'Sayı dizisi',en:'Number series'},
   else{r=P([2,3]);var c=R(-2,3);s=[a];for(i=1;i<7;i++)s.push(s[i-1]*r+c);}
   return {kind:'text',body:big(s.slice(0,6).join(' , ')+' , ?','mono'),check:function(t){return +t.replace(/\s/g,'')===s[6];},show:String(s[6]),ttl:tm(16+k*2,L)};});
 
-def('stroop',9,false,{tr:'Renk-kelime',en:'Colour-word'},
+def('stroop',9,{tr:'Renk-kelime',en:'Colour-word'},
  {tr:'DİKKAT ve ÇELİŞME. Bir renk adı başka bir renkle yazılmıştır. Kartın üstündeki kurala göre doğru renk karesini seç: "YAZININ RENGİ" ise yazının boyası, "KELİMENİN ANLAMI" ise kelimenin adı. 1-4 tuşları kareleri seçer. 40. seviyeden itibaren karelerin yeri karışır.',
   en:'ATTENTION & CONFLICT. A colour name is printed in another colour. Follow the rule on the card: pick the INK colour, or the colour the WORD names. Keys 1-4 pick the squares. From level 40 on the squares are shuffled.'},
  function(L){var C=U.sh(IM.COL).slice(0,4),wi=R(0,3),ink=R(0,3);if(Math.random()<.85)while(ink===wi)ink=R(0,3);
@@ -148,7 +148,7 @@ def('stroop',9,false,{tr:'Renk-kelime',en:'Colour-word'},
   return {kind:'choice',body:tag(IM.t(rule==='ink'?'ruleInk':'ruleWord'))+big(C[wi][IM.lang],'')['replace']('class="big"','class="big" style="color:'+C[ink].hex+'"'),
    opts:ord.map(function(i){return '<span class="sw" style="background:'+C[i].hex+'"></span>';}),ans:ord.indexOf(ans),show:C[ans][IM.lang],ttl:tm(6,L)};});
 
-def('ltm',25,true,{tr:'Uzun hafıza',en:'Long-term memory'},
+def('ltm',25,{tr:'Uzun hafıza',en:'Long-term memory'},
  {tr:'UZUN SÜRELİ HAFIZA. Oyun daha önce gördüğün kelimeleri 1 dk, 5 dk, 30 dk, 2 sa, 12 sa, 2 gün, 7 gün sonra yeniden sorar (aralıklı tekrar). Doğru bilirsen aralık uzar, yanlışta sıfırlanır. Hiç sorulacak kelime yoksa yeni bir kelime ezberletir. İlerleme tarayıcında kalır.',
   en:'LONG-TERM MEMORY. The game re-asks words you saw earlier after 1 min, 5 min, 30 min, 2 h, 12 h, 2 days, 7 days (spaced repetition). Right answers stretch the gap, wrong ones reset it. If nothing is due it teaches a new word. Progress stays in your browser.'},
  function(L){var rp=IM.rp,dec=rp?rp.ltm[rp.ltmI++]:null,D=IM.S.deck;
@@ -162,7 +162,7 @@ def('ltm',25,true,{tr:'Uzun hafıza',en:'Long-term memory'},
   return flash({shown:tag(IM.t('ltmNew'))+big(U.esc(w[0])+' = '+U.esc(en)),hidden:tag('TR → EN')+big(U.esc(w[0])),sec:fl(4),ans:tm(10,L),
    check:function(t){return A.indexOf(U.nz(t))>=0;},show:en,onResult:function(ok){IM.deckNote(w,ok);}});});
 
-def('dots',34,true,{tr:'Nokta sayma',en:'Dot counting'},
+def('dots',34,{tr:'Nokta sayma',en:'Dot counting'},
  {tr:'Ekranda bir anlığına noktalar belirir. Kaybolunca kaç tane olduğunu yaz. Seviye arttıkça noktalar çoğalır ve daha kısa görünür.',
   en:'Dots flash on screen for a moment. When they vanish, type how many there were. They multiply and show shorter as levels rise.'},
  function(L){var n=Math.min(40,R(3+Math.floor(L/10),6+Math.floor(L/6))),pts=[],tr=0,s='';
@@ -186,7 +186,7 @@ function genShape(n){var box=n>12?4:3,cells=[[1,1,1]],set={'1,1,1':1};
 function mutate(c){for(var t=0;t<80;t++){var i=R(0,c.length-1),rest=c.filter(function(_,j){return j!==i;}),set={};rest.forEach(function(v){set[key(v)]=1;});
  var b=P(rest),d=P(DIRS),w=[b[0]+d[0],b[1]+d[1],b[2]+d[2]];if(set[key(w)]||key(w)===key(c[i]))continue;var nc=rest.concat([w]);
  if(connected(nc)&&canon(nc)!==canon(c))return nc;}return null;}
-function drawVox(cv,cells,ang,tilt){if(IM.ff)return;var g=cv.getContext('2d'),W=cv.width,H=cv.height,k=IM.kindle,n=cells.length,i,cx=0,cy=0,cz=0,set={};
+function drawVox(cv,cells,ang,tilt){if(IM.ff)return;var g=cv.getContext('2d'),W=cv.width,H=cv.height,n=cells.length,i,cx=0,cy=0,cz=0,set={};
  g.clearRect(0,0,W,H);cells.forEach(function(v){cx+=v[0];cy+=v[1];cz+=v[2];set[key(v)]=1;});cx/=n;cy/=n;cz/=n;
  var ca=Math.cos(ang),sa=Math.sin(ang),ct=Math.cos(tilt),st=Math.sin(tilt),rad=1;
  function tr(x,y,z){var X=x*ca+z*sa,Z=-x*sa+z*ca,Y=y*ct-Z*st;Z=y*st+Z*ct;return [X,Y,Z];}
@@ -199,10 +199,10 @@ function drawVox(cv,cells,ang,tilt){if(IM.ff)return;var g=cv.getContext('2d'),W=
   var z=0;cs.forEach(function(p){z+=p[2];});faces.push({z:z/4,cs:cs.map(pr),sh:Math.max(0,Math.min(1,.55-rn[0]*.25-rn[1]*.35-rn[2]*.1))});}});
  faces.sort(function(a,b){return b.z-a.z;});
  faces.forEach(function(f){g.beginPath();g.moveTo(f.cs[0][0],f.cs[0][1]);for(i=1;i<4;i++)g.lineTo(f.cs[i][0],f.cs[i][1]);g.closePath();
-  var l=Math.round(22+f.sh*60);g.fillStyle=k?'hsl(0,0%,'+(30+f.sh*65)+'%)':'hsl(172,55%,'+l+'%)';g.fill();g.lineWidth=k?2:1.5;g.strokeStyle=k?'#000':'#071a1a';g.stroke();});}
+  var l=Math.round(22+f.sh*60);g.fillStyle='hsl(172,55%,'+l+'%)';g.fill();g.lineWidth=1.5;g.strokeStyle='#071a1a';g.stroke();});}
 IM.vox={ROTS:ROTS,rot:rot,canon:canon,genShape:genShape,mutate:mutate,connected:connected,draw:drawVox};
 
-def('voxcount',38,true,{tr:'3B küp sayma',en:'3D cube count'},
+def('voxcount',38,{tr:'3B küp sayma',en:'3D cube count'},
  {tr:'3 BOYUTLU UZAMSAL ALGI. Dönen üç boyutlu bir küp yapısı görürsün. Arkada ve içeride gizli kalanlar dahil toplam kaç küp olduğunu yaz. Yapı döndükçe farklı yüzleri görünür; hepsini zihninde birleştir.',
   en:'3D SPATIAL PERCEPTION. You see a rotating 3D cube structure. Type the total number of cubes, hidden ones included. As it spins, different faces appear; assemble them in your mind.'},
  function(L){var n=Math.max(3,Math.min(18,Math.min(16,4+Math.floor(L/8))+R(-2,2))),cells=genShape(n),ang=Math.random()*6,cv=null,sp;
@@ -210,7 +210,7 @@ def('voxcount',38,true,{tr:'3B küp sayma',en:'3D cube count'},
   sp.init=function(c){cv=c.el.querySelector('canvas');drawVox(cv,cells,ang,.5);};
   sp.update=function(dt){ang+=dt*.8;if(cv)drawVox(cv,cells,ang,.5);};sp.paint=function(){if(cv)drawVox(cv,cells,ang,.5);};return sp;});
 
-def('vox3d',44,true,{tr:'3B karşılaştırma',en:'3D compare'},
+def('vox3d',44,{tr:'3B karşılaştırma',en:'3D compare'},
  {tr:'3 BOYUTLU ZİHİNSEL DÖNDÜRME. İki yapı yan yana döner. Biri diğerinin sadece döndürülmüş hâli mi (1 = AYNI), yoksa bir küp yer değiştirmiş mi / ayna görüntüsü mü (2 = FARKLI)? 1 ya da 2 tuşuna bas.',
   en:'3D MENTAL ROTATION. Two structures spin side by side. Is one just a rotated copy (1 = SAME) or has a cube moved / is it a mirror image (2 = DIFFERENT)? Press 1 or 2.'},
  function(L){var n=Math.max(3,Math.min(13,Math.min(12,4+Math.floor(L/9))+R(-1,2))),a=genShape(n),same=Math.random()<.5,b;
@@ -220,7 +220,7 @@ def('vox3d',44,true,{tr:'3B karşılaştırma',en:'3D compare'},
   sp.init=function(c){var cs=c.el.querySelectorAll('canvas');c1=cs[0];c2=cs[1];drawVox(c1,a,ang,.5);drawVox(c2,b,ang+1.7,.5);};
   sp.update=function(dt){ang+=dt*.7;if(c1){drawVox(c1,a,ang,.5);drawVox(c2,b,ang+1.7,.5);}};sp.paint=function(){if(c1){drawVox(c1,a,ang,.5);drawVox(c2,b,ang+1.7,.5);}};return sp;});
 
-def('nback',50,false,{tr:'N-geri hafıza',en:'N-back'},
+def('nback',50,{tr:'N-geri hafıza',en:'N-back'},
  {tr:'ÇALIŞMA HAFIZASI. Harfler tek tek akar. Şu anki harf, N harf ÖNCEKİYLE aynıysa SPACE\'e bas (ya da düğmeye dokun). N=1: bir önceki, N=2: iki önceki, N=3: üç önceki. Eşleşmeyi kaçırmak da, yok yere basmak da kartı düşürür.',
   en:'WORKING MEMORY. Letters stream one by one. If the current letter equals the one N steps BACK press SPACE (or tap the button). N=1: previous, N=2: two back, N=3: three back. Missing a match or pressing wrongly fails the card.'},
  function(L){var n=L>=85?3:L>=65?2:1,len=8+Math.floor((L-50)/6),step=Math.max(1,2-(L-50)*.012),set='ABCDEFGH'.slice(0,L<70?6:8).split(''),seq=[],i,x,t=0,cur=-1,pr=false;
@@ -234,60 +234,125 @@ def('nback',50,false,{tr:'N-geri hafıza',en:'N-back'},
    if(cur<len&&(t%step)>step*.78)el.textContent='·';};
   return sp;});
 
-def('anagram',21,true,{tr:'Harf bulmaca',en:'Anagram'},
+def('anagram',21,{tr:'Harf bulmaca',en:'Anagram'},
  {tr:'Karışık harflerden Türkçe kelimeyi çıkar ve yaz. Başlangıçta İngilizce ipucu verilir, 40. seviyeden itibaren ipucu yoktur. Uzun kelimeler gelir.',
   en:'Unscramble the letters into a Turkish word and type it. An English hint is shown at first, none from level 40 on. Words get longer.'},
  function(L){var w,i=0,mx=Math.min(12,4+Math.floor(L/8));w=pickW(L,{minLen:4,maxLen:mx,nospace:1});
   var ch=w[0].split(''),sc;i=0;do{sc=U.sh(ch);i++;}while(sc.join('')===w[0]&&i<20);
   var key2=U.nz(w[0]).split('').sort().join(''),ok=IM.W.filter(function(x){return x[0].length===w[0].length&&U.nz(x[0]).split('').sort().join('')===key2;}).map(function(x){return U.nz(x[0]);});
   return {kind:'text',body:tag(IM.t('anaQ')+(L<40?' · '+U.esc(w[1].replace(/^to /,'')):''))+big(sc.join(' ').replace(/i/g,'İ').replace(/ı/g,'I').toUpperCase(),'mono'),check:function(t){return ok.indexOf(U.nz(t))>=0;},show:w[0],ttl:tm(8+w[0].length*1.6,L)};});
-/* ---- KÜP RUBİK 3B: 2×2 (L1) → 8×8 (L100). Her çıkartma (c=küp merkezi, n=yüzey normali, k=renk) 3B'de döner; çözüm = her yüzün tek renk olması. ---- */
-var RCOL=['#1f9d3a','#1f5fd8','#d62828','#ff8c1a','#f4f4f4','#ffd500'],RGRY=['#999','#555','#222','#bbb','#fff','#ddd'],RLT='GBROWY';
+/* ---- KÜP RUBİK 3B: 2×2 (L1) → 8×8 (L100). Her çıkartma (c=küp merkezi, n=yüzey normali, k=renk) 3B'de döner; çözüm = her yüzün tek renk olması.
+   Kontrol: 4 yön tuşu ÇEVİR (seçili satır/sütunu ekranda yukarı/aşağı/sola/sağa), 4 yön tuşu BAK (küpün çevresinde dolaş), fare/dokunma ile sürükle = bak.
+   Hepsi ekrana göre (kameraya göre) çalışır. Tuşlar IM.rb ile ayarlanır (menü → KÜP TUŞLARI). ---- */
+var RCOL=['#1f9d3a','#1f5fd8','#d62828','#ff8c1a','#f4f4f4','#ffd500'],RLT='GBROWY';
+IM.rb={
+ acts:[['tu','Çevir ↑','Turn ↑'],['td','Çevir ↓','Turn ↓'],['tl','Çevir ←','Turn ←'],['tr','Çevir →','Turn →'],
+  ['vu','Bak ▲','View ▲'],['vd','Bak ▼','View ▼'],['vl','Bak ◀','View ◀'],['vr','Bak ▶','View ▶'],
+  ['rp','Satır yukarı','Row up'],['rn','Satır aşağı','Row down'],['cp','Sütun sola','Column left'],['cn','Sütun sağa','Column right']],
+ def:{tu:'KeyW',td:'KeyS',tl:'KeyA',tr:'KeyD',vu:'ArrowUp',vd:'ArrowDown',vl:'ArrowLeft',vr:'ArrowRight',rp:'KeyQ',rn:'KeyE',cp:'KeyZ',cn:'KeyC'},
+ ok:/^(Key[A-Z]|Digit\d|Numpad\w+|Arrow\w+|Space|Bracket\w+|Comma|Period|Semicolon|Quote|Slash|Backslash|Minus|Equal|Backquote)$/,
+ keys:function(){var o={},k=(IM.S&&IM.S.rbKeys)||{},a;for(a in IM.rb.def)o[a]=k[a]||IM.rb.def[a];return o;},
+ find:function(code){var K=IM.rb.keys(),a;for(a in K)if(K[a]===code)return a;return null;},
+ label:function(c){var m={ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',Space:'␣'};if(m[c])return m[c];
+  if(/^Key[A-Z]$/.test(c))return c.slice(3);if(/^Digit\d$/.test(c))return c.slice(5);return c.replace('Numpad','Num ');}
+};
 function rv(v,a,q){var x=v[0],y=v[1],z=v[2],i,t;for(i=0;i<(q>0?1:3);i++){if(a===0){t=y;y=-z;z=t;}else if(a===1){t=x;x=z;z=-t;}else{t=x;x=-y;y=t;}}return [x,y,z];}
 function nidx(n){return n[2]>0?0:n[2]<0?1:n[0]>0?2:n[0]<0?3:n[1]>0?4:5;}
 function rbSize(L){return Math.min(8,2+Math.floor((L-1)/14.3));}
 function rbFrac(L,N){return Math.max(0,Math.min(1,((L-1)-(N-2)*14.3)/14.3));}
-def('rubik',5,true,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
- {tr:'3 BOYUTLU KÜP RUBİK. Karışık bir küp gelir. Fareyle sürükleyerek (ya da ◀▶▲▼ ile) küpü döndürüp bak. Bir EKSEN seç (R/L, U/D, F/B), sonra KATMAN numarasını seç: o katman küpte beyaz çerçeveyle parlar. ↻ / ↺ ile o katmanı çevir (↻ = adı yazan yüze bakınca saat yönü; 1. katman o yüze bitişik olandır). Her yüzü tek renge getir. 2×2 ile başlar, 100. seviyede 8×8 olur; karışıklık seviyeyle artar. Her 10. seviyenin sonunda (10, 20, … 100) bir küp çözmeden sonraki seviyeye geçemezsin; sıradan seviyelerde de bitmeden önce bir küp gelir. Süre dolarsa kart düşer.',
-  en:"3D RUBIK'S CUBE. A scrambled cube appears. Drag with the mouse (or use ◀▶▲▼) to look around it. Pick an AXIS (R/L, U/D, F/B), then a LAYER number: that layer glows with a white outline on the cube. Turn it with ↻ / ↺ (↻ = clockwise looking at the named face; layer 1 is the one touching that face). Make every face one colour. Starts at 2×2 and reaches 8×8 at level 100; scrambles get harder with level. At the end of every 10th level (10, 20, … 100) you must solve a cube to advance; ordinary levels also drop one before they end. If time runs out the card fails."},
- function(L){var o=IM.rbOpt||{};IM.rbOpt=null;var gate=!!o.gate,boss=gate&&L>=100,N=rbSize(L),fr,k,i,j,a,li,last='',st=[],log=[],guard=0,h,ax=1,ly=0,yaw=-.6,pit=.5,kd=IM.kindle,cvs=null;
+/* kamera: tr = dünya→ekran, it = ekran→dünya (tr'nin tersi) */
+function rbCam(y,p){var cy=Math.cos(y),sy=Math.sin(y),cp=Math.cos(p),sp=Math.sin(p);
+ return {tr:function(v){var x=v[0]*cy+v[2]*sy,z=-v[0]*sy+v[2]*cy,yy=v[1]*cp-z*sp;z=v[1]*sp+z*cp;return [x,yy,z];},
+  it:function(v){var yy=v[1]*cp+v[2]*sp,z=-v[1]*sp+v[2]*cp;return [v[0]*cy-z*sy,yy,v[0]*sy+z*cy];}};}
+/* ekranda "yukarı" ve "sağ" hangi dünya eksenlerine denk geliyor? */
+function rbAxes(y,p){var c=rbCam(y,p),up=c.it([0,1,0]),rt=c.it([1,0,0]),aV=0,aH,i,b=-1;
+ for(i=0;i<3;i++)if(Math.abs(up[i])>b){b=Math.abs(up[i]);aV=i;}
+ b=-1;aH=0;for(i=0;i<3;i++)if(i!==aV&&Math.abs(rt[i])>b){b=Math.abs(rt[i]);aH=i;}
+ return {cam:c,aV:aV,aH:aH,sV:up[aV]>=0?1:-1,sH:rt[aH]>=0?1:-1};}
+var RB_PIT=[-1.4,-.5,.5,1.4],RB_Y0=-.6,RB_Q=Math.PI/2;
+def('rubik',5,{tr:'Küp Rubik 3B',en:"Rubik's cube 3D"},
+ {tr:'3 BOYUTLU KÜP RUBİK. Karışık bir küp gelir; her yüzü tek renge getir. 2×2 ile başlar, 100. seviyede 8×8 olur. ÇEVİR: önce SATIR ve SÜTUN numarasını seç (küp üzerinde pembe = satır, turkuaz = sütun parlar; küpe tıklayarak da seçebilirsin). Sonra ÇEVİR yön tuşlarıyla (↑ ↓ ← →) o satırı sola/sağa, o sütunu yukarı/aşağı çevir. Hepsi ekrana göre çalışır. BAK: ◀ ▶ ▲ ▼ ile küpün çevresinde dolaş (yanlar, üst, alt) ya da fareyle / parmakla sürükle; sürüklediğin yöne döner, ters değil. Dolaştıkça küpün başka yüzleri de çevrilebilir hâle gelir. KLAVYE: küpün kartına tıkla; varsayılan olarak çevirmek W A S D, bakmak oklar, satır seçmek Q/E, sütun seçmek Z/C. Hepsi menüdeki KÜP TUŞLARI ekranından değiştirilebilir. Her 10. seviyenin sonunda (10, 20, … 100) bir küp çözmeden sonraki seviyeye geçemezsin; sıradan seviyelerde de bitmeden önce bir küp gelir. Süre dolarsa kart düşer.',
+  en:"3D RUBIK'S CUBE. A scrambled cube appears; make every face one colour. Starts at 2×2 and reaches 8×8 at level 100. TURN: first pick a ROW and a COLUMN number (on the cube pink = row, cyan = column; you can also click the cube to pick). Then use the TURN arrows (↑ ↓ ← →) to turn that row left/right and that column up/down. Everything is relative to the screen. LOOK: walk around the cube with ◀ ▶ ▲ ▼ (sides, top, bottom) or drag with the mouse / finger; it turns the way you drag, not the opposite. As you walk around, other faces become turnable. KEYBOARD: click the cube card; by default turn = W A S D, look = arrow keys, row = Q/E, column = Z/C. All of them can be changed in the menu under CUBE KEYS. At the end of every 10th level (10, 20, … 100) you must solve a cube to advance; ordinary levels also drop one before they end. If time runs out the card fails."},
+ function(L){var o=IM.rbOpt||{};IM.rbOpt=null;var gate=!!o.gate,boss=gate&&L>=100,N=rbSize(L),fr,k,i,j,a,li,last='',st=[],log=[],guard=0,h,rowI=0,colI=0,yaw=RB_Y0,pit=.5,tY=null,tP=null,cvs=null,hits=[],keyEl=null,kb=IM.rb.keys();
   if(!gate&&N>2&&Math.random()<.35)N--;
   h=N-1;fr=rbFrac(L,N)*(gate?1:.8);if(gate)fr=Math.min(1,fr+.15);
   k=boss?24:Math.max(1,Math.round(2+fr*(4+2*N))+R(-1,1));
-  var ttl=boss?1800:(45+k*16+N*N*4)*(gate?1.25:1)*(IM.kindle?1.5:1);
+  var ttl=boss?1800:(45+k*16+N*N*4)*(gate?1.25:1);
   for(a=0;a<3;a++)[1,-1].forEach(function(sg){var n=[0,0,0],u=(a+1)%3,w=(a+2)%3,x,y;n[a]=sg;
    for(x=0;x<N;x++)for(y=0;y<N;y++){var c=[0,0,0];c[a]=sg*h;c[u]=-h+2*x;c[w]=-h+2*y;st.push({c:c,n:n.slice(),k:nidx(n)});}});
   function mv(a,pv,q){st.forEach(function(s){if(s.c[a]===pv){s.c=rv(s.c,a,q);s.n=rv(s.n,a,q);}});}
   function solved(){var m={},ok=true;st.forEach(function(s){var key=s.n.join();if(m[key]===undefined)m[key]=s.k;else if(m[key]!==s.k)ok=false;});return ok;}
   do{log=[];for(i=0;i<k;i++){do{a=R(0,2);li=R(0,N-1);}while(a+':'+li===last&&k>1);last=a+':'+li;var q0=P([1,-1]);mv(a,-h+2*li,q0);log.push([a,-h+2*li,q0]);}guard++;}while(solved()&&guard<9);
-  function draw(){var cv=cvs;if(!cv)return;var g=cv.getContext('2d'),W=cv.width,H=cv.height,sc=.265*Math.min(W,H)/N,cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pit),sp2=Math.sin(pit),D=7*N,pv=h-2*ly,q=[];
-   function tr(v){var x=v[0]*cy+v[2]*sy,z=-v[0]*sy+v[2]*cy,y=v[1]*cp-z*sp2;z=v[1]*sp2+z*cp;return [x,y,z];}
+  /* "niyet edilen" görünüm: animasyon sürüyorsa hedef, yoksa şimdiki */
+  function ey(){return tY===null?yaw:tY;}function ep(){return tP===null?pit:tP;}
+  function axes(){return rbAxes(ey(),ep());}
+  function rowCo(A){return A.sV*(h-2*rowI);}function colCo(A){return A.sH*(-h+2*colI);}
+  function draw(){if(IM.ff)return;var cv=cvs;if(!cv)return;var g=cv.getContext('2d'),W=cv.width,H=cv.height,sc=.265*Math.min(W,H)/N,cm=rbCam(yaw,pit),D=7*N,A=axes(),rc=rowCo(A),cc=colCo(A),q=[];
+   function tr(v){return cm.tr(v);}
    function pj(p){var f=D/(D-p[2]);return [W/2+p[0]*sc*f,H/2-p[1]*sc*f,f];}
    function quad(cen,u,w,m){return [[-1,-1],[1,-1],[1,1],[-1,1]].map(function(d){var v=cen.slice();v[u]+=d[0]*m;v[w]+=d[1]*m;return pj(tr(v));});}
    g.clearRect(0,0,W,H);
    st.forEach(function(s){var nr=tr(s.n);if(nr[2]<=.02)return;var an=s.n[0]?0:s.n[1]?1:2,u=(an+1)%3,w=(an+2)%3,cen=[s.c[0]+s.n[0],s.c[1]+s.n[1],s.c[2]+s.n[2]];
-    q.push({z:tr(cen)[2],b:quad(cen,u,w,1),s:quad(cen,u,w,.86),k:s.k,sel:s.c[ax]===pv});});
-   q.sort(function(a,b){return a.z-b.z;});
+    q.push({z:tr(cen)[2],b:quad(cen,u,w,1),s:quad(cen,u,w,.86),k:s.k,c:s.c,rs:s.c[A.aV]===rc,cs:s.c[A.aH]===cc});});
+   q.sort(function(a,b){return a.z-b.z;});hits=q;
    function path(p){g.beginPath();g.moveTo(p[0][0],p[0][1]);for(var t=1;t<4;t++)g.lineTo(p[t][0],p[t][1]);g.closePath();}
-   q.forEach(function(e){path(e.b);g.fillStyle='#000';g.fill();path(e.s);g.fillStyle=(kd?RGRY:RCOL)[e.k];g.fill();
-    if(e.sel){g.lineWidth=kd?3:2.5;g.strokeStyle=kd?'#000':'#fff';g.stroke();}
-    if(kd||N<=4){var ce=[0,1,2,3].reduce(function(m,t){return [m[0]+e.s[t][0]/4,m[1]+e.s[t][1]/4];},[0,0]);g.fillStyle=(kd&&(e.k===1||e.k===2))?'#fff':'#000';g.font='bold '+Math.round(sc*e.s[0][2]*1.3)+'px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(RLT.charAt(e.k),ce[0],ce[1]);}});}
-  var AX=['R/L','U/D','F/B'],bx='<div class="rbx">'+AX.map(function(t,j){return '<button data-t="a'+j+'">'+t+'</button>';}).join('')+'</div><div class="rbx">';
-  for(i=0;i<N;i++)bx+='<button data-t="l'+i+'">'+(i+1)+'</button>';bx+='</div>';
+   q.forEach(function(e){path(e.b);g.fillStyle='#000';g.fill();path(e.s);g.fillStyle=RCOL[e.k];g.fill();
+    if(e.rs){g.lineWidth=3;g.strokeStyle='#ff2bd6';g.stroke();}
+    if(e.cs){g.lineWidth=e.rs?1.5:3;g.strokeStyle='#00e5ff';g.stroke();}
+    if(N<=4){var ce=[0,1,2,3].reduce(function(m,t){return [m[0]+e.s[t][0]/4,m[1]+e.s[t][1]/4];},[0,0]);g.fillStyle='#000';g.font='bold '+Math.round(sc*e.s[0][2]*1.3)+'px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(RLT.charAt(e.k),ce[0],ce[1]);}});}
+  /* ÇEVİR: yön = ekranda en öndeki taşın gideceği yön. Eksen/katman ekran satırı/sütunundan çıkar. */
+  function turn(d){var A=axes(),ax=(d===2||d===3)?A.aV:A.aH,co=(d===2||d===3)?rowCo(A):colCo(A),dv=A.cam.it([0,0,1]),best=null,bs=-1e9;
+   dv[ax]=0;var m=Math.sqrt(dv[0]*dv[0]+dv[1]*dv[1]+dv[2]*dv[2])||1;dv=dv.map(function(x){return 3*x/m;});
+   [1,-1].forEach(function(q){var s0=A.cam.tr(dv),s1=A.cam.tr(rv(dv,ax,q)),sc2=d===0?s1[1]-s0[1]:d===1?s0[1]-s1[1]:d===2?s0[0]-s1[0]:s1[0]-s0[0];if(sc2>bs){bs=sc2;best=q;}});
+   mv(ax,co,best);}
+  function stepView(dir){var by=ey(),bp=ep(),t;
+   if(dir==='l'||dir==='r'){var kk=(by-RB_Y0)/RB_Q;kk=dir==='l'?Math.ceil(kk-1e-6)-1:Math.floor(kk+1e-6)+1;tY=RB_Y0+kk*RB_Q;}
+   else if(dir==='u'){t=null;RB_PIT.forEach(function(v){if(v<bp-1e-6)t=v;});tP=t===null?RB_PIT[0]:t;}
+   else{t=null;for(var z=RB_PIT.length-1;z>=0;z--)if(RB_PIT[z]>bp+1e-6)t=RB_PIT[z];tP=t===null?RB_PIT[RB_PIT.length-1]:t;}}
+  var bx='<div class="rbl">'+(IM.lang==='tr'?'SATIR (pembe)':'ROW (pink)')+'</div><div class="rbx r">';
+  for(i=0;i<N;i++)bx+='<button data-t="R'+i+'">'+(i+1)+'</button>';
+  bx+='</div><div class="rbl">'+(IM.lang==='tr'?'SÜTUN (turkuaz)':'COLUMN (cyan)')+'</div><div class="rbx c">';
+  for(i=0;i<N;i++)bx+='<button data-t="C'+i+'">'+(i+1)+'</button>';bx+='</div>';
+  function cross(p,sym,cls){var h2='<div class="dp '+cls+'">';['u','l','d','r'].forEach(function(d,ix){h2+='<button class="d'+d+'" data-t="'+p+d+'" data-a="'+p+d+'">'+sym[ix]+'<small data-k="'+p+d+'"></small></button>';});return h2+'</div>';}
+  var pads='<div class="rbpads"><div><div class="rbl">'+(IM.lang==='tr'?'ÇEVİR':'TURN')+'</div>'+cross('t',['↑','←','↓','→'],'tn')+'</div><div><div class="rbl">'+(IM.lang==='tr'?'BAK':'LOOK')+'</div>'+cross('v',['▲','◀','▼','▶'],'vw')+'</div></div>';
   var sp={kind:'custom',ttl:ttl,show:IM.lang==='tr'?'En fazla '+k+' hamlede çözülürdü':'Solvable in at most '+k+' moves',gate:gate,dump:function(){return JSON.stringify(st);},scr:log,solvedNow:solved,
-   body:tag((gate?(IM.lang==='tr'?'KAPI · çöz ve geç · ':'GATE · solve to advance · '):'')+N+'×'+N)+'<canvas class="cv rbcv" width="320" height="300"></canvas>'+bx+
-   '<div class="pad"><button data-t="cw">↻</button><button data-t="ccw">↺</button><button data-t="v0">◀</button><button data-t="v1">▶</button><button data-t="v2">▲</button><button data-t="v3">▼</button></div>'};
-  function sync(c){U.qa(c.el,'.rbx button').forEach(function(b){var t=b.getAttribute('data-t'),on=(t==='a'+ax)||(t==='l'+ly);b.className=on?'on':'';});draw();}
-  function act(t,c){if(c.done)return;if(t.charAt(0)==='a')ax=+t.slice(1);else if(t.charAt(0)==='l')ly=+t.slice(1);
-   else if(t==='cw'||t==='ccw'){mv(ax,h-2*ly,t==='cw'?-1:1);if(solved()){sync(c);c.pass();return;}}
-   else if(t==='v0')yaw-=.5;else if(t==='v1')yaw+=.5;else if(t==='v2')pit=Math.min(1.4,pit+.35);else if(t==='v3')pit=Math.max(-1.4,pit-.35);
+   body:tag((gate?(IM.lang==='tr'?'KAPI · çöz ve geç · ':'GATE · solve to advance · '):'')+N+'×'+N)+'<canvas class="cv rbcv" width="320" height="300"></canvas><div class="rbh"></div>'+bx+pads};
+  function sync(c){U.qa(c.el,'.rbx button').forEach(function(b){var t=b.getAttribute('data-t');b.className=(t==='R'+rowI||t==='C'+colI)?'on':'';});draw();}
+  function clampI(v){return Math.max(0,Math.min(N-1,v));}
+  function act(t,c){if(c.done)return;var ch=t.charAt(0),dm={u:0,d:1,l:2,r:3};
+   if(ch==='R')rowI=clampI(+t.slice(1));else if(ch==='C')colI=clampI(+t.slice(1));
+   else if(t==='rp')rowI=clampI(rowI-1);else if(t==='rn')rowI=clampI(rowI+1);else if(t==='cp')colI=clampI(colI-1);else if(t==='cn')colI=clampI(colI+1);
+   else if(ch==='t'){turn(dm[t.charAt(1)]);if(solved()){sync(c);c.pass();return;}}
+   else if(ch==='v')stepView(t.charAt(1));
    sync(c);}
   sp.act=act;
-  sp.init=function(c){cvs=c.el.querySelector('canvas');
-   U.qa(c.el,'.rbx button,.pad button').forEach(function(b){b.onclick=function(ev){ev.stopPropagation();act(b.getAttribute('data-t'),c);};});
-   if(!kd){var dr=null;function mm(x,y){if(!dr)return;yaw+=(x-dr[0])*.012;pit=Math.max(-1.4,Math.min(1.4,pit-(y-dr[1])*.012));dr=[x,y];draw();}
-    cvs.onmousedown=function(e){dr=[e.clientX,e.clientY];e.preventDefault();};cvs.onmousemove=function(e){mm(e.clientX,e.clientY);};cvs.onmouseup=cvs.onmouseleave=function(){dr=null;};
-    cvs.ontouchstart=function(e){var t=e.touches[0];dr=[t.clientX,t.clientY];};cvs.ontouchmove=function(e){var t=e.touches[0];mm(t.clientX,t.clientY);e.preventDefault();};cvs.ontouchend=function(){dr=null;};}
+  sp.rbApply=function(kind,a,b,c){if(c.done)return;
+   if(kind==='k')act(a,c);
+   else if(kind==='v'){yaw=a;pit=b;tY=tP=null;sync(c);}
+   else if(kind==='s'){rowI=clampI(a);colI=clampI(b);sync(c);}};
+  sp.paint=draw;
+  sp.update=function(dt,c){var mvd=false,f=Math.min(1,dt*10);
+   if(tY!==null){yaw+=(tY-yaw)*f;if(Math.abs(tY-yaw)<.003){yaw=tY;tY=null;}mvd=true;}
+   if(tP!==null){pit+=(tP-pit)*f;if(Math.abs(tP-pit)<.003){pit=tP;tP=null;}mvd=true;}
+   if(mvd)draw();
+   if(keyEl&&!IM.ff){var on=IM.rbOn&&IM.rbOn()===c,tx=on?(IM.lang==='tr'?'⌨ klavye aktif':'⌨ keyboard on'):(IM.lang==='tr'?'⌨ klavye için küpe tıkla':'⌨ click the cube for keyboard');if(keyEl.textContent!==tx)keyEl.textContent=tx;}};
+  sp.init=function(c){cvs=c.el.querySelector('canvas');keyEl=c.el.querySelector('.rbh');
+   U.qa(c.el,'.rbx button,.dp button').forEach(function(b){b.onclick=function(ev){ev.stopPropagation();act(b.getAttribute('data-t'),c);};});
+   U.qa(c.el,'small[data-k]').forEach(function(s){s.textContent=IM.rb.label(kb[s.getAttribute('data-k')]);});
+   var dr=null,mx=0;
+   function down(x,y){if(IM.rp||c.done)return;dr=[x,y];mx=0;tY=tP=null;}
+   function move(x,y){if(!dr)return;var dx=x-dr[0],dy=y-dr[1];mx+=Math.abs(dx)+Math.abs(dy);yaw+=dx*.012;pit=Math.max(-1.45,Math.min(1.45,pit+dy*.012));dr=[x,y];draw();}
+   function up(x,y){if(!dr)return;dr=null;if(mx>0)IM.evt&&IM.evt('R',c.n,'v',yaw,pit);
+    if(mx<5&&x!==undefined){var r=cvs.getBoundingClientRect(),px=(x-r.left)*cvs.width/r.width,py=(y-r.top)*cvs.height/r.height,i2,e,A;
+     function inside(p){var ins=false,a2,b2;for(a2=0,b2=3;a2<4;b2=a2++){if(((p[a2][1]>py)!==(p[b2][1]>py))&&(px<(p[b2][0]-p[a2][0])*(py-p[a2][1])/(p[b2][1]-p[a2][1])+p[a2][0]))ins=!ins;}return ins;}
+     for(i2=hits.length-1;i2>=0;i2--){e=hits[i2];if(inside(e.b)){A=axes();rowI=clampI((h-A.sV*e.c[A.aV])/2);colI=clampI((A.sH*e.c[A.aH]+h)/2);IM.evt&&IM.evt('R',c.n,'s',rowI,colI);sync(c);return;}}}
+    draw();}
+   cvs.onmousedown=function(e){if(!e.isTrusted)return;down(e.clientX,e.clientY);e.preventDefault();};
+   cvs.onmousemove=function(e){if(e.isTrusted)move(e.clientX,e.clientY);};
+   cvs.onmouseup=function(e){if(e.isTrusted)up(e.clientX,e.clientY);};cvs.onmouseleave=function(){if(dr){dr=null;if(mx>0)IM.evt&&IM.evt('R',c.n,'v',yaw,pit);}};
+   cvs.ontouchstart=function(e){if(!e.isTrusted||!e.touches[0])return;down(e.touches[0].clientX,e.touches[0].clientY);};
+   cvs.ontouchmove=function(e){if(!e.isTrusted||!e.touches[0])return;move(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();};
+   cvs.ontouchend=function(e){if(!e.isTrusted)return;var t=e.changedTouches&&e.changedTouches[0];up(t?t.clientX:undefined,t?t.clientY:undefined);e.preventDefault();};
    sync(c);};
   return sp;});
 T.rubik.noPool=1;

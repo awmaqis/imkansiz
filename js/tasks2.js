@@ -2,9 +2,9 @@
 (function(){
 var IM=window.IM,U=IM.U,R=U.R,P=U.P,T=IM.TASKS;
 function X(a,b){return IM.lang==='tr'?a:b;}
-function tm(b,L){return b*Math.max(.35,1-L*.0065)*(IM.kindle?1.5:1);}
-function fl(s){return IM.kindle?s*1.5+1:s;}
-function def(id,unlock,kindle,name,how,make){T[id]={id:id,unlock:unlock,kindle:kindle,name:name,how:how,make:make};}
+function tm(b,L){return b*Math.max(.35,1-L*.0065);}
+function fl(s){return s;}
+function def(id,unlock,name,how,make){T[id]={id:id,unlock:unlock,name:name,how:how,make:make};}
 function big(s,c){return '<div class="big'+(c?' '+c:'')+'">'+s+'</div>';}
 function tag(s){return '<div class="tag">'+s+'</div>';}
 function sup(n){var m={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).replace(/[0-9]/g,function(c){return m[c];});}
@@ -21,7 +21,7 @@ function cx(k){var a,b;
  if(k===4){a=R(3,15);b=R(3,15);return [a+' × '+b,a*b];}
  if(k===5){a=R(1,19)*5;b=R(2,20)*10;return [a+'% × '+b,a*b/100];}
  a=R(3,100);return ['log₂ '+a,Math.log(a)/Math.LN2];}
-def('compare',8,true,{tr:'Karşılaştır',en:'Compare'},
+def('compare',8,{tr:'Karşılaştır',en:'Compare'},
  {tr:'KARAR HIZI. İki ifadeden hangisinin BÜYÜK (ya da KÜÇÜK) olduğunu seç: 1 veya 2 tuşu ya da dokunma. Seviye arttıkça ifadeler (kesir, ondalık, üs, kök, yüzde, logaritma) birbirine çok yaklaşır; hesaplamadan tahmin etmek gerekir.',
   en:'DECISION SPEED. Pick which of two expressions is LARGER (or SMALLER): press 1 or 2, or tap. As levels rise the expressions (fractions, decimals, powers, roots, percents, logs) get closer, so you must estimate fast.'},
  function(L){var km=Math.min(6,Math.floor(L/12)+1),x,y,i,ok=false,thr=Math.max(.012,.2-L*.002),mx=.4-L*.002;
@@ -44,7 +44,7 @@ function sufOpts(w,k){var e=w.charAt(w.length-1),vow='aıoueiöü'.indexOf(e)>=0
  if(k==='abl')return ['dan','den','tan','ten'].map(function(s){return w+s;});
  if(k==='dat')return ['a','e','ya','ye'].map(function(s){return w+s;});
  return ['ı','i','u','ü'].map(function(s){return w+b+s;});}
-def('suffix',12,true,{tr:'Ek ustası',en:'Suffix master'},
+def('suffix',12,{tr:'Ek ustası',en:'Suffix master'},
  {tr:'TÜRKÇE DİL BİLGİSİ. Bir kelime ve istenen hâl (çoğul, bulunma -da, ayrılma -dan, yönelme -a, belirtme -ı) verilir. Ünlü uyumuna, sert ünsüz benzeşmesine (-ta/-te) ve kaynaştırma "y" harfine göre doğru biçimi seç. Kuralı bilmeyen ezberleyerek öğrenir.',
   en:'TURKISH GRAMMAR. A word and a case (plural, locative -da, ablative -dan, dative -a, accusative -ı) are given. Pick the correct form using vowel harmony, hard-consonant assimilation (-ta/-te) and the buffer letter "y". You absorb the rules by repetition.'},
  function(L){var raw=P(SW),soft=raw.charAt(raw.length-1)==='*',w=raw.replace('*',''),ks=['pl','loc','abl'];
@@ -53,7 +53,7 @@ def('suffix',12,true,{tr:'Ek ustası',en:'Suffix master'},
   op=U.sh(op);return {kind:'choice',body:big(w)+tag(lab),opts:op,ans:op.indexOf(ok),show:ok,ttl:tm(8,L)};});
 
 /* ---- Zincir hesap: çalışma belleği + aritmetik ---- */
-def('chain',16,true,{tr:'Zincir hesap',en:'Chain calc'},
+def('chain',16,{tr:'Zincir hesap',en:'Chain calc'},
  {tr:'ÇALIŞMA BELLEĞİ + HESAP. Önce bir sayı, sonra tek tek işlemler (+7, ×3, −4…) belirir ve kaybolur. Sonucu aklından hesaplayıp yaz. Not alamazsın; sayıyı hep aklında güncelle.',
   en:'WORKING MEMORY + ARITHMETIC. A start number, then single operations (+7, ×3, −4…) appear and vanish. Compute the result in your head and type it. Keep updating the running number mentally.'},
  function(L){var n=Math.min(9,3+Math.floor(L/12)),st,v,ops,i,k,a,g=0;
@@ -66,7 +66,7 @@ def('chain',16,true,{tr:'Zincir hesap',en:'Chain calc'},
   return sp;});
 
 /* ---- Kelime listesi: sözel kısa süreli bellek ---- */
-def('wordspan',20,true,{tr:'Kelime listesi',en:'Word list'},
+def('wordspan',20,{tr:'Kelime listesi',en:'Word list'},
  {tr:'SÖZEL KISA SÜRELİ BELLEK. Bir kelime listesi kısa süre görünür. Kaybolunca "3. kelime neydi?" diye sorulur; yüksek seviyelerde bazen tüm kelimeleri (sırasız) yazman istenir. Kelimeleri bir hikâyeye bağlamak hatırlamayı kolaylaştırır.',
   en:'VERBAL SHORT-TERM MEMORY. A list of words shows briefly. When hidden you are asked "what was word #3?"; at high levels sometimes you must type them all (any order). Linking the words into a story makes recall easier.'},
  function(L){var n=Math.min(9,3+Math.floor(L/15)),ck=Object.keys(IM.CATS),ws=[],tr=0,w;
@@ -77,7 +77,7 @@ def('wordspan',20,true,{tr:'Kelime listesi',en:'Word list'},
    check:function(t){if(!all)return U.nz(t)===U.nz(ws[k]);var tk=t.split(/[\s,;]+/).filter(Boolean).map(U.nz);return tk.length===n&&ws.every(function(x){return tk.indexOf(U.nz(x))>=0;});},show:all?ws.join(' '):ws[k]});});
 
 /* ---- Pusula: uzamsal yönelim ---- */
-def('compass',24,true,{tr:'Pusula',en:'Compass'},
+def('compass',24,{tr:'Pusula',en:'Compass'},
  {tr:'UZAMSAL YÖNELİM. Başlangıçta (0,0) noktasında KUZEYE bakıyorsun. Komutlar sırayla uygulanır (ileri, sağa dön, sola dön, geri dön). Önce sadece sonunda hangi yöne baktığını seçersin; sonra bulunduğun yeri "x,y" olarak yazarsın (doğu = +x, kuzey = +y).',
   en:'SPATIAL ORIENTATION. You start at (0,0) facing NORTH. Commands apply in order (forward, turn right, turn left, turn around). At first you pick the final facing; later you type your final position as "x,y" (east = +x, north = +y).'},
  function(L){var n=Math.min(12,3+Math.floor(L/10)),face=0,x=0,y=0,st=[],i,k,a,mode=L<30?'face':'pos',DX=[0,1,0,-1],DY=[1,0,-1,0];
@@ -93,7 +93,7 @@ def('compass',24,true,{tr:'Pusula',en:'Compass'},
    check:function(t){var m=t.replace(/[−–]/g,'-').match(/^\s*\(?\s*(-?\d+)\s*[,; ]\s*(-?\d+)\s*\)?\s*$/);return !!m&&+m[1]===x&&+m[2]===y;}};});
 
 /* ---- Eşleştir: görsel bellek + sözcük ---- */
-def('pairs',27,true,{tr:'Kart eşleştir',en:'Card pairs'},
+def('pairs',27,{tr:'Kart eşleştir',en:'Card pairs'},
  {tr:'GÖRSEL + SÖZEL BELLEK. Kartlar kısa süre açık kalır: her Türkçe kelimenin İngilizce karşılığı vardır. Kapanınca kartlara dokunarak çiftleri bul (TR kelime + EN anlamı). Yanlış eşleşme hakkın sınırlıdır; seviye arttıkça çift sayısı artar, hata hakkı azalır.',
   en:'VISUAL + VERBAL MEMORY. Cards stay open briefly: each Turkish word has an English meaning. When they close, tap to find pairs (TR word + EN meaning). Wrong matches are limited; more pairs and fewer allowed mistakes as levels rise.'},
  function(L){var m=Math.min(8,3+Math.floor(L/25)),ws=[],tr=0,w,en,cards=[],i;
@@ -114,7 +114,7 @@ def('pairs',27,true,{tr:'Kart eşleştir',en:'Card pairs'},
   return sp;});
 
 /* ---- Işıklar: mantık / planlama bulmacası ---- */
-def('lights',33,true,{tr:'Işıklar',en:'Lights out'},
+def('lights',33,{tr:'Işıklar',en:'Lights out'},
  {tr:'MANTIK ve PLANLAMA. Bir kareye basınca kendisi ve yandaki (üst, alt, sağ, sol) kareler yanar/söner. Hepsini söndür. Bulmaca çözülebilir olarak üretilir; basış sırası önemli değildir, aynı kareye iki kez basmak etkisizdir. Seviye arttıkça ızgara 5×5 olur.',
   en:'LOGIC & PLANNING. Pressing a square flips it and its four neighbours. Turn everything off. Puzzles are always solvable; order does not matter and pressing a square twice cancels out. The grid grows to 5×5.'},
  function(L){var n=L<60?3:L<85?4:5,k=Math.min(n*n-2,2+Math.floor(L/14)),g=[],i;for(i=0;i<n*n;i++)g.push(0);
@@ -132,5 +132,5 @@ def('lights',33,true,{tr:'Işıklar',en:'Lights out'},
 var META={math:['∑','math'],rubik:['◰','spatial'],words:['Aa','lang'],type:['⌨','lang'],arrows:['⇅','motor'],stroop:['◐','attn'],digits:['№','mem'],series:['…','logic'],odd:['≠','lang'],react:['⚡','motor'],schulte:['▦','attn'],anagram:['⤮','lang'],grid:['▣','mem'],ltm:['⌛','mem'],sound:['♪','attn'],assoc:['⇄','lang'],dots:['∴','attn'],voxcount:['⬡','spatial'],vox3d:['⟳','spatial'],nback:['N','mem'],compare:['⚖','math'],suffix:['-lar','lang'],chain:['⛓','math'],wordspan:['¶','mem'],compass:['✢','spatial'],pairs:['◫','mem'],lights:['✦','logic']};
 Object.keys(T).forEach(function(id){var m=META[id]||['•','logic'];T[id].ico=m[0];T[id].cat=m[1];});
 IM.CATN={math:['Matematik','Math'],lang:['Dil','Language'],mem:['Hafıza','Memory'],attn:['Dikkat','Attention'],spatial:['Uzamsal 3B','Spatial 3D'],motor:['Refleks','Reflex'],logic:['Mantık','Logic']};
-IM.sfx=function(ok){if(IM.kindle||IM.mute)return;IM.tones(ok?[660,990]:[196,131],ok?.07:.13);};
+IM.sfx=function(ok){if(IM.mute)return;IM.tones(ok?[660,990]:[196,131],ok?.07:.13);};
 })();

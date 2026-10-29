@@ -4,9 +4,9 @@ var IM=window.IM=window.IM||{},IDX='imr:idx',PRE='imr:';
 function jget(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
 function jset(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
 function idx(){var a=jget(IDX);return a&&a.length!==undefined?a:[];}
-function meta(r){var e=r.end||{};return {id:r.id,ts:r.ts,L:r.L,res:e.res||'quit',sec:Math.round((e.tick||0)*r.dt),ok:e.ok||0,bad:e.bad||0,un:e.un?1:0,kindle:r.kindle?1:0};}
+function meta(r){var e=r.end||{};return {id:r.id,ts:r.ts,L:r.L,res:e.res||'quit',sec:Math.round((e.tick||0)*r.dt),ok:e.ok||0,bad:e.bad||0,un:e.un?1:0};}
 IM.recs={dropped:0,
- list:function(){return idx().slice().sort(function(a,b){return b.ts-a.ts;});},
+ list:function(){return idx().filter(function(x){return !x.kindle;}).slice().sort(function(a,b){return b.ts-a.ts;});},
  get:function(id){return jget(PRE+id);},
  put:function(r){var ix=idx().filter(function(x){return x.id!==r.id;}),ok=jset(PRE+r.id,r);
   while(!ok&&ix.length){var o=0,i;for(i=1;i<ix.length;i++)if(ix[i].ts<ix[o].ts)o=i;
